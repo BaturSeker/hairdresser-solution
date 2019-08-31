@@ -44,7 +44,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_AUTHORITY + "')")
     public void save(AuthorityRequestDto authorityRequestDto) {
         AuthorityEntity authorityEntity = new AuthorityEntity();
-        authorityEntity.setParentAuthority(authorityRepository.getOne(authorityRequestDto.getParentId()));
+        authorityEntity.setParentAuthorityEntity(authorityRepository.getOne(authorityRequestDto.getParentId()));
         authorityEntity.setCreatedDate(CalendarHelper.getCurrentInstant());
         authorityEntity.setMenu(authorityRequestDto.getMenu());
         authorityEntity.setAuthorityCode(authorityRequestDto.getAuthorizeCode());
@@ -70,7 +70,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     private void cancelRoleAuthorityRelation(Long authorityId) {
-        List<RoleAuthorityEntity> roleAuthorities = roleAuthorityRepository.findAllByAuthority(authorityRepository.getOne(authorityId));
+        List<RoleAuthorityEntity> roleAuthorities = roleAuthorityRepository.findAllByAuthorityEntity(authorityRepository.getOne(authorityId));
         for (RoleAuthorityEntity roleAuthorityEntity : roleAuthorities) {
             roleAuthorityRepository.delete(roleAuthorityEntity);
         }
@@ -90,18 +90,18 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_AUTHORITY_MANAGEMENT + "')")
     public List<AuthorityEntity> readAll() {
-        return authorityRepository.findByParentAuthorityOrderById(null);
+        return authorityRepository.findByParentAuthorityEntityOrderById(null);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_ROLE_AUTHORITIES + "')")
     public void assignRoleAuthorities(RoleAuthorityRequestDto roleAuthorityRequestDto) {
         RoleEntity role = roleRepository.getOne(roleAuthorityRequestDto.getRoleId());
-        roleAuthorityRepository.deleteAllByRole(role);
+        roleAuthorityRepository.deleteAllByRoleEntity(role);
         for (Long authorityId : roleAuthorityRequestDto.getAuthorityIds()) {
             RoleAuthorityEntity roleAuthorityEntity = new RoleAuthorityEntity();
-            roleAuthorityEntity.setRole(role);
-            roleAuthorityEntity.setAuthority(authorityRepository.getOne(authorityId));
+            roleAuthorityEntity.setRoleEntity(role);
+            roleAuthorityEntity.setAuthorityEntity(authorityRepository.getOne(authorityId));
             roleAuthorityRepository.save(roleAuthorityEntity);
         }
     }
@@ -116,13 +116,13 @@ public class AuthorityServiceImpl implements AuthorityService {
         }
         Set<Long> authorityIds = new HashSet<>();
         for (Long roleId : roleIds) {
-            List<RoleAuthorityEntity> roleAuthorities = roleAuthorityRepository.findAllByRole(roleRepository.getOne(roleId));
+            List<RoleAuthorityEntity> roleAuthorities = roleAuthorityRepository.findAllByRoleEntity(roleRepository.getOne(roleId));
             for (RoleAuthorityEntity roleAuth : roleAuthorities) {
-                authorityIds.add(roleAuth.getAuthority().getId());
+                authorityIds.add(roleAuth.getAuthorityEntity().getId());
             }
         }
 
-        List<AuthorityEntity> allAuthorityEntity = this.authorityRepository.findByParentAuthorityOrderById(null);
+        List<AuthorityEntity> allAuthorityEntity = this.authorityRepository.findByParentAuthorityEntityOrderById(null);
         return getAuthorities(allAuthorityEntity, authorityIds);
     }
 
@@ -130,12 +130,12 @@ public class AuthorityServiceImpl implements AuthorityService {
     public List<AuthorityEntity> getAnonymousUserAuthorities() {
         RoleEntity role = roleRepository.findByName("AnonymousUser");
         Set<Long> authorityIds = new HashSet<>();
-        List<RoleAuthorityEntity> roleAuthorities = roleAuthorityRepository.findAllByRole(roleRepository.getOne(role.getId()));
+        List<RoleAuthorityEntity> roleAuthorities = roleAuthorityRepository.findAllByRoleEntity(roleRepository.getOne(role.getId()));
         for (RoleAuthorityEntity roleAuth : roleAuthorities) {
-            authorityIds.add(roleAuth.getAuthority().getId());
+            authorityIds.add(roleAuth.getAuthorityEntity().getId());
         }
 
-        List<AuthorityEntity> allAuthorityEntity = this.authorityRepository.findByParentAuthorityOrderById(null);
+        List<AuthorityEntity> allAuthorityEntity = this.authorityRepository.findByParentAuthorityEntityOrderById(null);
         return getAuthorities(allAuthorityEntity, authorityIds);
     }
 
@@ -180,7 +180,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
             authorityPageDto.setAuthorityId(authorityEntity.getId());
             authorityPageDto.setUrl(authorityEntity.getUrl());
-            authorityPageDto.setParentId(Objects.nonNull(authorityEntity.getParentAuthority()) ? authorityEntity.getParentAuthority().getId() : null);
+            authorityPageDto.setParentId(Objects.nonNull(authorityEntity.getParentAuthorityEntity()) ? authorityEntity.getParentAuthorityEntity().getId() : null);
             authorityPageDto.setMenu(authorityEntity.getMenu());
             authorityPageDto.setTitle(authorityEntity.getTitle());
 
@@ -190,14 +190,14 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     public List<AuthorityResponse> findAuthoritiesByRoleId(Long roleId) {
-        List<RoleAuthorityEntity> roleAuthorities = this.roleAuthorityRepository.findAllByRole(roleRepository.getOne(roleId));
+        List<RoleAuthorityEntity> roleAuthorities = this.roleAuthorityRepository.findAllByRoleEntity(roleRepository.getOne(roleId));
         Set<Long> authorityIds = new HashSet<>();
 
         for (RoleAuthorityEntity roleAuth : roleAuthorities) {
-            authorityIds.add(roleAuth.getAuthority().getId());
+            authorityIds.add(roleAuth.getAuthorityEntity().getId());
         }
 
-        List<AuthorityEntity> allAuthorityEntity = this.authorityRepository.findByParentAuthorityOrderById(null);
+        List<AuthorityEntity> allAuthorityEntity = this.authorityRepository.findByParentAuthorityEntityOrderById(null);
         List<AuthorityEntity> authorities = getAuthorities(allAuthorityEntity, authorityIds);
 
         return AuthorityMapper.INSTANCE.entityListToDtoList(authorities);

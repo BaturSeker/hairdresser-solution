@@ -11,9 +11,9 @@ import java.util.List;
 @Repository
 public interface RoleAuthorityRepository extends BaseRepository<RoleAuthorityEntity, Long> {
 
-    List<RoleAuthorityEntity> findAllByAuthority(AuthorityEntity authorityEntity);
+    List<RoleAuthorityEntity> findAllByAuthorityEntity(AuthorityEntity authorityEntity);
 
-    List<RoleAuthorityEntity> findAllByRole(RoleEntity role);
+    List<RoleAuthorityEntity> findAllByRoleEntity(RoleEntity role);
 
-    void deleteAllByRole(RoleEntity role);
+    void deleteAllByRoleEntity(RoleEntity role);
 }

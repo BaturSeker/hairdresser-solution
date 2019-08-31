@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface AuthorityRepository extends BaseRepository<AuthorityEntity, Long> {
 
-    List<AuthorityEntity> findByParentAuthorityOrderById(AuthorityEntity parentAuthorityEntity);
+    List<AuthorityEntity> findByParentAuthorityEntityOrderById(AuthorityEntity parentAuthorityEntity);
 
     @Modifying
     @Transactional

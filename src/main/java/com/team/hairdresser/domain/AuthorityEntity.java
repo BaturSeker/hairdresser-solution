@@ -35,19 +35,19 @@ public class AuthorityEntity extends BaseEntity<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ParentId")
-    private AuthorityEntity parentAuthority;
+    private AuthorityEntity parentAuthorityEntity;
 
     @JsonIgnoreProperties("authorityByParentId")
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentAuthority", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentAuthorityEntity", cascade = CascadeType.ALL)
     private List<AuthorityEntity> authorities;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "authority")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "authorityEntity")
     private Collection<RoleAuthorityEntity> roleAuthorities;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "authority")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "authorityEntity")
     private Collection<UserHistoryEntity> userHistories;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "authority")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "authorityEntity")
     private Collection<UserLogEntity> userLogEntitties;
 
     public String getTitle() {
@@ -106,12 +106,20 @@ public class AuthorityEntity extends BaseEntity<Long> {
         this.authorityCode = authorityCode;
     }
 
-    public AuthorityEntity getParentAuthority() {
-        return parentAuthority;
+    public AuthorityEntity getParentAuthorityEntity() {
+        return parentAuthorityEntity;
     }
 
-    public void setParentAuthority(AuthorityEntity parentAuthority) {
-        this.parentAuthority = parentAuthority;
+    public void setParentAuthorityEntity(AuthorityEntity parentAuthorityEntity) {
+        this.parentAuthorityEntity = parentAuthorityEntity;
+    }
+
+    public Collection<UserLogEntity> getUserLogEntitties() {
+        return userLogEntitties;
+    }
+
+    public void setUserLogEntitties(Collection<UserLogEntity> userLogEntitties) {
+        this.userLogEntitties = userLogEntitties;
     }
 
     public List<AuthorityEntity> getAuthorities() {

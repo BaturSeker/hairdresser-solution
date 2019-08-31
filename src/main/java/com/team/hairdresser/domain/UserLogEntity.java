@@ -20,7 +20,7 @@ public class UserLogEntity extends BaseEntity<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "AuthorityId", nullable = false)
-    private AuthorityEntity authority;
+    private AuthorityEntity authorityEntity;
 
     public Boolean getSuccesful() {
         return isSuccesful;
@@ -46,11 +46,11 @@ public class UserLogEntity extends BaseEntity<Long> {
         this.user = user;
     }
 
-    public AuthorityEntity getAuthority() {
-        return authority;
+    public AuthorityEntity getAuthorityEntity() {
+        return authorityEntity;
     }
 
-    public void setAuthority(AuthorityEntity authority) {
-        this.authority = authority;
+    public void setAuthorityEntity(AuthorityEntity authorityEntity) {
+        this.authorityEntity = authorityEntity;
     }
 }

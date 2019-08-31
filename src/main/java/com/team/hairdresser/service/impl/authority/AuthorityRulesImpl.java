@@ -175,9 +175,9 @@ public class AuthorityRulesImpl implements AuthorityRules {
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean shouldIconExist(Long authorityId) {
         AuthorityEntity authorityEntity = read(authorityId);
-        if (authorityEntity.getParentAuthority() != null) {
-            AuthorityEntity parent = authorityEntity.getParentAuthority();
-            if (parent.getParentAuthority() == null) {
+        if (authorityEntity.getParentAuthorityEntity() != null) {
+            AuthorityEntity parent = authorityEntity.getParentAuthorityEntity();
+            if (parent.getParentAuthorityEntity() == null) {
                 return true;
             }
         }
