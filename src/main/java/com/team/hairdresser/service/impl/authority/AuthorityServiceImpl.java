@@ -9,7 +9,7 @@ import com.team.hairdresser.dao.RoleRepository;
 import com.team.hairdresser.domain.*;
 import com.team.hairdresser.dto.authority.AuthorityPageDto;
 import com.team.hairdresser.dto.authority.AuthorityRequestDto;
-import com.team.hairdresser.dto.authority.AuthorityResponse;
+import com.team.hairdresser.dto.authority.AuthorityResponseDto;
 import com.team.hairdresser.dto.authority.RoleAuthorityRequestDto;
 import com.team.hairdresser.service.api.authority.AuthorityService;
 import com.team.hairdresser.utils.pageablesearch.model.BaseSortRequestDto;
@@ -189,7 +189,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
-    public List<AuthorityResponse> findAuthoritiesByRoleId(Long roleId) {
+    public List<AuthorityResponseDto> findAuthoritiesByRoleId(Long roleId) {
         List<RoleAuthorityEntity> roleAuthorities = this.roleAuthorityRepository.findAllByRoleEntity(roleRepository.getOne(roleId));
         Set<Long> authorityIds = new HashSet<>();
 

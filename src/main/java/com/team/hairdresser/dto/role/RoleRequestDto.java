@@ -1,6 +1,6 @@
 package com.team.hairdresser.dto.role;
 
-public class RoleRequest {
+public class RoleRequestDto {
     private Integer roleId;
     private String name;
     private String description;

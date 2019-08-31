@@ -1,7 +1,7 @@
 package com.team.hairdresser.dto.role;
 
 
-import com.team.hairdresser.dto.authority.AuthorityResponse;
+import com.team.hairdresser.dto.authority.AuthorityResponseDto;
 
 import java.util.List;
 
@@ -11,13 +11,13 @@ public class RoleDto {
     private String name;
     private String description;
     private Boolean isDeleted;
-    private List<AuthorityResponse> roleAuthorities;
+    private List<AuthorityResponseDto> roleAuthorities;
 
-    public List<AuthorityResponse> getRoleAuthorities() {
+    public List<AuthorityResponseDto> getRoleAuthorities() {
         return roleAuthorities;
     }
 
-    public void setRoleAuthorities(List<AuthorityResponse> roleAuthorities) {
+    public void setRoleAuthorities(List<AuthorityResponseDto> roleAuthorities) {
         this.roleAuthorities = roleAuthorities;
     }
 

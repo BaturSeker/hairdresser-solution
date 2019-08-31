@@ -8,8 +8,8 @@ import com.team.hairdresser.dao.UsersRepository;
 import com.team.hairdresser.domain.RoleEntity;
 import com.team.hairdresser.domain.UserRoleEntity;
 import com.team.hairdresser.domain.UserEntity;
-import com.team.hairdresser.dto.role.RoleRequest;
-import com.team.hairdresser.dto.user.UserRoleRequest;
+import com.team.hairdresser.dto.role.RoleRequestDto;
+import com.team.hairdresser.dto.user.UserRoleRequestDto;
 import com.team.hairdresser.service.api.role.RoleService;
 import com.team.hairdresser.service.api.user.UserRules;
 import com.team.hairdresser.utils.util.ComboResponseBuilder;
@@ -33,16 +33,16 @@ public class RoleServiceImpl implements RoleService {
     private UserRules userRules;
 
     @Override
-    public void save(RoleRequest roleRequest) {
+    public void save(RoleRequestDto roleRequestDto) {
         RoleEntity role = new RoleEntity();
         role.setDeleted(false);
-        role.setDescription(roleRequest.getDescription());
-        role.setName(roleRequest.getName());
+        role.setDescription(roleRequestDto.getDescription());
+        role.setName(roleRequestDto.getName());
         roleRepository.saveAndFlush(role);
     }
 
     @Override
-    public void update(Long roleId, RoleRequest roleRequest) throws NullObjectException {
+    public void update(Long roleId, RoleRequestDto roleRequestDto) throws NullObjectException {
         RoleEntity role = null;
         try {
             role = roleRepository.getOne(roleId);
@@ -52,8 +52,8 @@ public class RoleServiceImpl implements RoleService {
         if (role == null) {
             throw new NullObjectException(ExceptionMessages.ROLE_NULL);
         }
-        role.setDescription(roleRequest.getDescription());
-        role.setName(roleRequest.getName());
+        role.setDescription(roleRequestDto.getDescription());
+        role.setName(roleRequestDto.getName());
         roleRepository.saveAndFlush(role);
     }
 
@@ -78,11 +78,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void assignUserRoles(UserRoleRequest userRoleRequest) {
-        for (Long roleId : userRoleRequest.getRoleIds()) {
+    public void assignUserRoles(UserRoleRequestDto userRoleRequestDto) {
+        for (Long roleId : userRoleRequestDto.getRoleIds()) {
             UserRoleEntity userRoleEntity = new UserRoleEntity();
             userRoleEntity.setRole(roleRepository.getOne(roleId));
-            userRoleEntity.setUser(usersRepository.getOne(userRoleRequest.getUserId()));
+            userRoleEntity.setUser(usersRepository.getOne(userRoleRequestDto.getUserId()));
             userRoleRepository.saveAndFlush(userRoleEntity);
         }
     }

@@ -1,12 +1,12 @@
 package com.team.hairdresser.dto.login;
 
-import com.team.hairdresser.dto.authority.AuthorityResponse;
+import com.team.hairdresser.dto.authority.AuthorityResponseDto;
 
 import java.util.List;
 
 public class LoginResponseDto {
     private LoginUserResponseDto loginUserResponseDto;
-    private List<AuthorityResponse> authorityResponse;
+    private List<AuthorityResponseDto> authorityResponseDto;
     private String token;
 
     public String getToken() {
@@ -17,12 +17,12 @@ public class LoginResponseDto {
         this.token = token;
     }
 
-    public List<AuthorityResponse> getAuthorityResponse() {
-        return authorityResponse;
+    public List<AuthorityResponseDto> getAuthorityResponseDto() {
+        return authorityResponseDto;
     }
 
-    public void setAuthorityResponse(List<AuthorityResponse> authorityResponse) {
-        this.authorityResponse = authorityResponse;
+    public void setAuthorityResponseDto(List<AuthorityResponseDto> authorityResponseDto) {
+        this.authorityResponseDto = authorityResponseDto;
     }
 
     public LoginUserResponseDto getLoginUserResponseDto() {

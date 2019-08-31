@@ -1,27 +1,24 @@
 package com.team.hairdresser.dto.authority;
 
-public class AuthorityResponseDto {
 
-    private Integer authorityId;
+import java.util.List;
+
+public class AuthorityResponseDto {
+    private Long authorityId;
     private String url;
-    private Integer parentId;
     private Boolean isMenu;
     private String title;
+    private String icon;
+    private Boolean hasIcon;
+    List<AuthorityResponseDto> authorities;
+    private String authorityCode;
 
-    public Integer getParentId() {
-        return parentId;
+    public List<AuthorityResponseDto> getAuthorities() {
+        return authorities;
     }
 
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
-    }
-
-    public Integer getAuthorityId() {
-        return authorityId;
-    }
-
-    public void setAuthorityId(Integer authorityId) {
-        this.authorityId = authorityId;
+    public void setAuthorities(List<AuthorityResponseDto> authorities) {
+        this.authorities = authorities;
     }
 
     public String getUrl() {
@@ -32,12 +29,12 @@ public class AuthorityResponseDto {
         this.url = url;
     }
 
-    public Boolean getMenu() {
-        return isMenu;
+    public Long getAuthorityId() {
+        return authorityId;
     }
 
-    public void setMenu(Boolean menu) {
-        isMenu = menu;
+    public void setAuthorityId(Long authorityId) {
+        this.authorityId = authorityId;
     }
 
     public String getTitle() {
@@ -46,5 +43,37 @@ public class AuthorityResponseDto {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Boolean getMenu() {
+        return isMenu;
+    }
+
+    public void setMenu(Boolean menu) {
+        isMenu = menu;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public Boolean getHasIcon() {
+        return hasIcon;
+    }
+
+    public void setHasIcon(Boolean hasIcon) {
+        this.hasIcon = hasIcon;
+    }
+
+    public void setAuthorityCode(String authorityCode) {
+        this.authorityCode = authorityCode;
+    }
+
+    public String getAuthorityCode() {
+        return authorityCode;
     }
 }

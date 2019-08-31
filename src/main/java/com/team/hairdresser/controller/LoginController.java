@@ -5,7 +5,7 @@ import com.team.hairdresser.config.ActiveDirectoryHelper;
 import com.team.hairdresser.config.security.JwtUtil;
 import com.team.hairdresser.domain.AuthorityEntity;
 import com.team.hairdresser.domain.UserEntity;
-import com.team.hairdresser.dto.authority.AuthorityResponse;
+import com.team.hairdresser.dto.authority.AuthorityResponseDto;
 import com.team.hairdresser.dto.login.LoginRequestDto;
 import com.team.hairdresser.dto.login.LoginResponseDto;
 import com.team.hairdresser.dto.login.LoginUserResponseDto;
@@ -47,7 +47,7 @@ public class LoginController {
                 List<AuthorityEntity> authorities = this.authorityRules.getUserAuthorities(user);
                 LoginResponseDto loginResponseDto = new LoginResponseDto();
                 loginResponseDto.setLoginUserResponseDto(getUserResponse(user));
-                loginResponseDto.setAuthorityResponse(getAuthorityResponse(authorities));
+                loginResponseDto.setAuthorityResponseDto(getAuthorityResponse(authorities));
 
                 HttpHeaders headers = new HttpHeaders();
                 String token = jwtUtil.generateTokenWithId(user);
@@ -65,7 +65,7 @@ public class LoginController {
             List<AuthorityEntity> authorities = this.authorityRules.getUserAuthorities(user);
             LoginResponseDto loginResponseDto = new LoginResponseDto();
             loginResponseDto.setLoginUserResponseDto(getUserResponse(user));
-            loginResponseDto.setAuthorityResponse(getAuthorityResponse(authorities));
+            loginResponseDto.setAuthorityResponseDto(getAuthorityResponse(authorities));
 
             HttpHeaders headers = new HttpHeaders();
             String token = jwtUtil.generateTokenWithId(user);
@@ -81,8 +81,8 @@ public class LoginController {
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getCustomerUserAuthorities() {
         List<AuthorityEntity> authorities = this.authorityRules.getAnonymousUserAuthorities();
-        List<AuthorityResponse> authorityResponse = getAuthorityResponse(authorities);
-        return new ResponseEntity<>(authorityResponse, HttpStatus.OK);
+        List<AuthorityResponseDto> authorityResponseDto = getAuthorityResponse(authorities);
+        return new ResponseEntity<>(authorityResponseDto, HttpStatus.OK);
     }
 
     @PostMapping(value = "logout")
@@ -109,23 +109,23 @@ public class LoginController {
         return loginUserResponseDto;
     }
 
-    private List<AuthorityResponse> getAuthorityResponse(List<AuthorityEntity> authorities) {
-        List<AuthorityResponse> authorityResponses = new ArrayList<>();
+    private List<AuthorityResponseDto> getAuthorityResponse(List<AuthorityEntity> authorities) {
+        List<AuthorityResponseDto> authorityResponsDtos = new ArrayList<>();
         for (AuthorityEntity authorityEntity : authorities) {
-            AuthorityResponse authorityResponse = new AuthorityResponse();
+            AuthorityResponseDto authorityResponseDto = new AuthorityResponseDto();
             if (!authorityEntity.getAuthorities().isEmpty()) {
-                List<AuthorityResponse> newAuthorityResponses = getAuthorityResponse(new ArrayList<>(authorityEntity.getAuthorities()));
-                authorityResponse.setAuthorities(newAuthorityResponses);
+                List<AuthorityResponseDto> newAuthorityResponsDtos = getAuthorityResponse(new ArrayList<>(authorityEntity.getAuthorities()));
+                authorityResponseDto.setAuthorities(newAuthorityResponsDtos);
             }
-            authorityResponse.setUrl(authorityEntity.getUrl());
-            authorityResponse.setAuthorityId(authorityEntity.getId());
-            authorityResponse.setTitle(authorityEntity.getTitle());
-            authorityResponses.add(authorityResponse);
-            authorityResponse.setMenu(authorityEntity.getMenu());
-            authorityResponse.setIcon(authorityEntity.getIcon());
-            authorityResponse.setAuthorityCode(authorityEntity.getAuthorityCode());
+            authorityResponseDto.setUrl(authorityEntity.getUrl());
+            authorityResponseDto.setAuthorityId(authorityEntity.getId());
+            authorityResponseDto.setTitle(authorityEntity.getTitle());
+            authorityResponsDtos.add(authorityResponseDto);
+            authorityResponseDto.setMenu(authorityEntity.getMenu());
+            authorityResponseDto.setIcon(authorityEntity.getIcon());
+            authorityResponseDto.setAuthorityCode(authorityEntity.getAuthorityCode());
         }
-        return authorityResponses;
+        return authorityResponsDtos;
     }
 
     @Autowired

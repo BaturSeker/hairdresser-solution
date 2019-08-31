@@ -3,7 +3,7 @@ package com.team.hairdresser.dto.user;
 
 import java.util.List;
 
-public class UserRoleRequest {
+public class UserRoleRequestDto {
     private Long userId;
     private List<Long> roleIds;
 

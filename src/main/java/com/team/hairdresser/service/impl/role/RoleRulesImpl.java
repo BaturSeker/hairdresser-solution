@@ -3,8 +3,8 @@ package com.team.hairdresser.service.impl.role;
 import com.team.hairdresser.constant.AuthorityCodes;
 import com.team.hairdresser.constant.ValidationMessages;
 import com.team.hairdresser.domain.RoleEntity;
-import com.team.hairdresser.dto.role.RoleRequest;
-import com.team.hairdresser.dto.user.UserRoleRequest;
+import com.team.hairdresser.dto.role.RoleRequestDto;
+import com.team.hairdresser.dto.user.UserRoleRequestDto;
 import com.team.hairdresser.service.api.role.RoleRules;
 import com.team.hairdresser.service.api.role.RoleService;
 import com.team.hairdresser.utils.util.ValidationHelper;
@@ -26,15 +26,15 @@ public class RoleRulesImpl implements RoleRules {
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.CREATE_ROLE + "')")
-    public void save(RoleRequest roleRequest) {
+    public void save(RoleRequestDto roleRequestDto) {
         StringBuilder messages = new StringBuilder();
         boolean isValid = true;
-        if (!ValidationHelper.notEmpty(roleRequest.getName())) {
+        if (!ValidationHelper.notEmpty(roleRequestDto.getName())) {
             isValid = false;
             messages.append(ValidationMessages.ROLE_NAME_NOT_NULL);
             messages.append(System.lineSeparator());
         }
-        if (!ValidationHelper.notEmpty(roleRequest.getDescription())) {
+        if (!ValidationHelper.notEmpty(roleRequestDto.getDescription())) {
             isValid = false;
             messages.append(ValidationMessages.ROLE_DESCRIPTION_NOT_NULL);
             messages.append(System.lineSeparator());
@@ -44,12 +44,12 @@ public class RoleRulesImpl implements RoleRules {
             throw new ValidationException(messages.toString());
         }
 
-        roleService.save(roleRequest);
+        roleService.save(roleRequestDto);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_ROLE + "')")
-    public void update(Long roleId, RoleRequest roleRequest) {
+    public void update(Long roleId, RoleRequestDto roleRequestDto) {
         StringBuilder messages = new StringBuilder();
         boolean isValid = true;
         if (!ValidationHelper.notEmpty(roleId)) {
@@ -57,12 +57,12 @@ public class RoleRulesImpl implements RoleRules {
             messages.append(ValidationMessages.ROLE_ID_NOT_NULL);
             messages.append(System.lineSeparator());
         }
-        if (!ValidationHelper.notEmpty(roleRequest.getName())) {
+        if (!ValidationHelper.notEmpty(roleRequestDto.getName())) {
             isValid = false;
             messages.append(ValidationMessages.ROLE_NAME_NOT_NULL);
             messages.append(System.lineSeparator());
         }
-        if (!ValidationHelper.notEmpty(roleRequest.getDescription())) {
+        if (!ValidationHelper.notEmpty(roleRequestDto.getDescription())) {
             isValid = false;
             messages.append(ValidationMessages.ROLE_DESCRIPTION_NOT_NULL);
             messages.append(System.lineSeparator());
@@ -72,7 +72,7 @@ public class RoleRulesImpl implements RoleRules {
             throw new ValidationException(messages.toString());
         }
 
-        roleService.update(roleId, roleRequest);
+        roleService.update(roleId, roleRequestDto);
     }
 
     @Override
@@ -119,15 +119,15 @@ public class RoleRulesImpl implements RoleRules {
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_ROLE_MANAGEMENT + "')")
-    public void assignUserRoles(UserRoleRequest userRoleRequest) {
+    public void assignUserRoles(UserRoleRequestDto userRoleRequestDto) {
         StringBuilder message = new StringBuilder();
         boolean isValid = true;
-        if (!ValidationHelper.notEmpty(userRoleRequest.getUserId())) {
+        if (!ValidationHelper.notEmpty(userRoleRequestDto.getUserId())) {
             isValid = false;
             message.append(ValidationMessages.ASSIGN_USER_ID_NOT_NULL);
             message.append(System.lineSeparator());
         }
-        if (!ValidationHelper.notNull(userRoleRequest.getRoleIds())) {
+        if (!ValidationHelper.notNull(userRoleRequestDto.getRoleIds())) {
             isValid = false;
             message.append(ValidationMessages.ASSIGN_ROLE_IDS_LIST_NOT_NULL);
             message.append(System.lineSeparator());
@@ -137,7 +137,7 @@ public class RoleRulesImpl implements RoleRules {
             throw new ValidationException(message.toString());
         }
 
-        roleService.assignUserRoles(userRoleRequest);
+        roleService.assignUserRoles(userRoleRequestDto);
     }
 
     @Override

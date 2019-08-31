@@ -5,8 +5,8 @@ import com.team.hairdresser.constant.SuccessMessages;
 import com.team.hairdresser.domain.RoleEntity;
 import com.team.hairdresser.dto.SuccessResponseDto;
 import com.team.hairdresser.dto.role.RoleDto;
-import com.team.hairdresser.dto.role.RoleRequest;
-import com.team.hairdresser.dto.user.UserRoleRequest;
+import com.team.hairdresser.dto.role.RoleRequestDto;
+import com.team.hairdresser.dto.user.UserRoleRequestDto;
 import com.team.hairdresser.service.api.authority.AuthorityRules;
 import com.team.hairdresser.service.api.role.RoleRules;
 import com.team.hairdresser.service.impl.role.RoleMapper;
@@ -50,22 +50,22 @@ public class RoleController {
 
     @PutMapping(value = "{roleId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
-    public ResponseEntity updateRole(@PathVariable Long roleId, @Valid @RequestBody RoleRequest roleRequest) {
-        roleRules.update(roleId, roleRequest);
+    public ResponseEntity updateRole(@PathVariable Long roleId, @Valid @RequestBody RoleRequestDto roleRequestDto) {
+        roleRules.update(roleId, roleRequestDto);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.ROLE_UPDATE_TITLE, SuccessMessages.ROLE_UPDATE_MESSAGE), HttpStatus.OK);
     }
 
     @PostMapping(value = "save")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
-    public ResponseEntity saveRole(@Valid @RequestBody RoleRequest roleRequest) {
-        roleRules.save(roleRequest);
+    public ResponseEntity saveRole(@Valid @RequestBody RoleRequestDto roleRequestDto) {
+        roleRules.save(roleRequestDto);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.ROLE_CREATE_TITLE, SuccessMessages.ROLE_CREATE_MESSAGE), HttpStatus.OK);
     }
 
     @PostMapping(value = "assignUserRoles")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
-    public ResponseEntity assignUserRoles(@Valid @RequestBody UserRoleRequest userRoleRequest) {
-        roleRules.assignUserRoles(userRoleRequest);
+    public ResponseEntity assignUserRoles(@Valid @RequestBody UserRoleRequestDto userRoleRequestDto) {
+        roleRules.assignUserRoles(userRoleRequestDto);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.ROLE_ASSIGN_TITLE, SuccessMessages.ROLE_ASSIGN_MESSAGE), HttpStatus.OK);
     }
 

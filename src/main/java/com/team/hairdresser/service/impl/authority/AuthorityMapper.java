@@ -3,7 +3,7 @@ package com.team.hairdresser.service.impl.authority;
 
 import com.team.hairdresser.config.mapper.GeneralMapStructConfig;
 import com.team.hairdresser.domain.AuthorityEntity;
-import com.team.hairdresser.dto.authority.AuthorityResponse;
+import com.team.hairdresser.dto.authority.AuthorityResponseDto;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,14 +18,14 @@ public interface AuthorityMapper {
     AuthorityMapper INSTANCE = Mappers.getMapper(AuthorityMapper.class);
 
     @InheritInverseConfiguration
-    AuthorityEntity dtoToEntity(AuthorityResponse authorityResponse);
+    AuthorityEntity dtoToEntity(AuthorityResponseDto authorityResponseDto);
 
     @Mappings({
             @Mapping(source = "id", target = "authorityId"),
     })
-    AuthorityResponse entityToDto(AuthorityEntity authorityEntity);
+    AuthorityResponseDto entityToDto(AuthorityEntity authorityEntity);
 
-    List<AuthorityEntity> dtoListToEntityList(List<AuthorityResponse> authorityResponses);
+    List<AuthorityEntity> dtoListToEntityList(List<AuthorityResponseDto> authorityResponsDtos);
 
-    List<AuthorityResponse> entityListToDtoList(List<AuthorityEntity> authorities);
+    List<AuthorityResponseDto> entityListToDtoList(List<AuthorityEntity> authorities);
 }

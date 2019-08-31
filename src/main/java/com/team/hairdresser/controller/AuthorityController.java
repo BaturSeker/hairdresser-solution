@@ -31,12 +31,12 @@ public class AuthorityController {
     public ResponseEntity getAuthority(@PathVariable Long authorityId) {
 
         AuthorityEntity authorityEntity = authorityRules.read(authorityId);
-        AuthorityResponse authorityResponse = new AuthorityResponse();
-        authorityResponse.setAuthorityId(authorityId);
-        authorityResponse.setTitle(authorityEntity.getTitle());
-        authorityResponse.setIcon(authorityEntity.getIcon());
-        authorityResponse.setHasIcon(authorityRules.shouldIconExist(authorityId));
-        return new ResponseEntity<>(authorityResponse, HttpStatus.OK);
+        AuthorityResponseDto authorityResponseDto = new AuthorityResponseDto();
+        authorityResponseDto.setAuthorityId(authorityId);
+        authorityResponseDto.setTitle(authorityEntity.getTitle());
+        authorityResponseDto.setIcon(authorityEntity.getIcon());
+        authorityResponseDto.setHasIcon(authorityRules.shouldIconExist(authorityId));
+        return new ResponseEntity<>(authorityResponseDto, HttpStatus.OK);
     }
 
     @PutMapping(value = "{authorityId}")
@@ -64,15 +64,15 @@ public class AuthorityController {
     @GetMapping(value = "getAllAuthorities")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAllAuthorities() {
-        List<AuthorityResponse> authorityResponses = AuthorityMapper.INSTANCE.entityListToDtoList(authorityRules.readAll());
-        return new ResponseEntity<>(authorityResponses, HttpStatus.OK);
+        List<AuthorityResponseDto> authorityResponsDtos = AuthorityMapper.INSTANCE.entityListToDtoList(authorityRules.readAll());
+        return new ResponseEntity<>(authorityResponsDtos, HttpStatus.OK);
     }
 
     @GetMapping(value = "getAll")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAll() {
-        List<AuthorityResponseDto> authorityResponseDtos = AuthorityResponseDtoMapper.INSTANCE.entityListToDtoList(authorityRules.readAllAuthority());
-        return new ResponseEntity<>(authorityResponseDtos, HttpStatus.OK);
+        List<AuthoritySimpleResponseDto> authoritySimpleResponseDtos = AuthorityResponseDtoMapper.INSTANCE.entityListToDtoList(authorityRules.readAllAuthority());
+        return new ResponseEntity<>(authoritySimpleResponseDtos, HttpStatus.OK);
     }
 
     @PostMapping("list")
