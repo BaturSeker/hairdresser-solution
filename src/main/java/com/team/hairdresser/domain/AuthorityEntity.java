@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-public class Authority extends BaseEntity<Long> {
+public class AuthorityEntity extends BaseEntity<Long> {
 
     @Column(name = "Title")
     private String title;
@@ -35,11 +35,11 @@ public class Authority extends BaseEntity<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ParentId")
-    private Authority parentAuthority;
+    private AuthorityEntity parentAuthority;
 
     @JsonIgnoreProperties("authorityByParentId")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentAuthority", cascade = CascadeType.ALL)
-    private List<Authority> authorities;
+    private List<AuthorityEntity> authorities;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "authority")
     private Collection<RoleAuthority> roleAuthorities;
@@ -106,19 +106,19 @@ public class Authority extends BaseEntity<Long> {
         this.authorityCode = authorityCode;
     }
 
-    public Authority getParentAuthority() {
+    public AuthorityEntity getParentAuthority() {
         return parentAuthority;
     }
 
-    public void setParentAuthority(Authority parentAuthority) {
+    public void setParentAuthority(AuthorityEntity parentAuthority) {
         this.parentAuthority = parentAuthority;
     }
 
-    public List<Authority> getAuthorities() {
+    public List<AuthorityEntity> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(List<Authority> authorities) {
+    public void setAuthorities(List<AuthorityEntity> authorities) {
         this.authorities = authorities;
     }
 

@@ -50,8 +50,8 @@ public class AuthorityListRulesImpl implements AuthorityListRules {
             List<RoleAuthority> roleAuthorities = role.getRoleAuthorities();
             if (roleAuthorities != null) {
                 for (RoleAuthority ra : roleAuthorities) {
-                    Authority authority = ra.getAuthority();
-                    authorities.add(new SimpleGrantedAuthority(authority.getAuthorityCode()));
+                    AuthorityEntity authorityEntity = ra.getAuthority();
+                    authorities.add(new SimpleGrantedAuthority(authorityEntity.getAuthorityCode()));
                 }
             }
         }

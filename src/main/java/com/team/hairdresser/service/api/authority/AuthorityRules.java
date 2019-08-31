@@ -1,6 +1,6 @@
 package com.team.hairdresser.service.api.authority;
 
-import com.team.hairdresser.domain.Authority;
+import com.team.hairdresser.domain.AuthorityEntity;
 import com.team.hairdresser.domain.Users;
 import com.team.hairdresser.dto.authority.AuthorityRequestDto;
 import com.team.hairdresser.dto.authority.AuthorityResponse;
@@ -13,19 +13,19 @@ public interface AuthorityRules {
 
     void update(Long authorityId, AuthorityRequestDto authorityRequestDto);
 
-    Authority read(Long authorityId);
+    AuthorityEntity read(Long authorityId);
 
-    List<Authority> readAll();
+    List<AuthorityEntity> readAll();
 
     void assignRoleAuthorities(RoleAuthorityRequestDto roleAuthorityRequestDto);
 
-    List<Authority> getUserAuthorities(Users users) throws Exception;
+    List<AuthorityEntity> getUserAuthorities(Users users) throws Exception;
 
-    List<Authority> getAnonymousUserAuthorities();
+    List<AuthorityEntity> getAnonymousUserAuthorities();
 
-    Authority findByAuthorityCode(String authorityCode);
+    AuthorityEntity findByAuthorityCode(String authorityCode);
 
-    List<Authority> readAllAuthority();
+    List<AuthorityEntity> readAllAuthority();
 
     List<AuthorityResponse> findAuthoritiesByRoleId(Long roleId);
 

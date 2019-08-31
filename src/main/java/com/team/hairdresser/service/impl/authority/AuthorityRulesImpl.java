@@ -2,7 +2,7 @@ package com.team.hairdresser.service.impl.authority;
 
 
 import com.team.hairdresser.constant.ValidationMessages;
-import com.team.hairdresser.domain.Authority;
+import com.team.hairdresser.domain.AuthorityEntity;
 import com.team.hairdresser.domain.Users;
 import com.team.hairdresser.dto.authority.AuthorityRequestDto;
 import com.team.hairdresser.dto.authority.AuthorityResponse;
@@ -98,7 +98,7 @@ public class AuthorityRulesImpl implements AuthorityRules {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Authority read(Long authorityId) {
+    public AuthorityEntity read(Long authorityId) {
         StringBuilder message = new StringBuilder();
         boolean isValid = true;
         if (!ValidationHelper.isValid(authorityId)) {
@@ -114,7 +114,7 @@ public class AuthorityRulesImpl implements AuthorityRules {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Authority> readAll() throws NullObjectException {
+    public List<AuthorityEntity> readAll() throws NullObjectException {
         return authorityService.readAll();
     }
 
@@ -142,26 +142,26 @@ public class AuthorityRulesImpl implements AuthorityRules {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Authority> getUserAuthorities(Users users) {
+    public List<AuthorityEntity> getUserAuthorities(Users users) {
         return this.authorityService.getUserAuthorities(users);
     }
 
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Authority> getAnonymousUserAuthorities() {
+    public List<AuthorityEntity> getAnonymousUserAuthorities() {
         return this.authorityService.getAnonymousUserAuthorities();
     }
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Authority findByAuthorityCode(String authorityCode) {
+    public AuthorityEntity findByAuthorityCode(String authorityCode) {
         return null;
     }
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Authority> readAllAuthority() {
+    public List<AuthorityEntity> readAllAuthority() {
         return this.authorityService.readAllAuthority();
     }
 
@@ -174,9 +174,9 @@ public class AuthorityRulesImpl implements AuthorityRules {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean shouldIconExist(Long authorityId) {
-        Authority authority = read(authorityId);
-        if (authority.getParentAuthority() != null) {
-            Authority parent = authority.getParentAuthority();
+        AuthorityEntity authorityEntity = read(authorityId);
+        if (authorityEntity.getParentAuthority() != null) {
+            AuthorityEntity parent = authorityEntity.getParentAuthority();
             if (parent.getParentAuthority() == null) {
                 return true;
             }

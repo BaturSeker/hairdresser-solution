@@ -1,6 +1,6 @@
 package com.team.hairdresser.service.api.authority;
 
-import com.team.hairdresser.domain.Authority;
+import com.team.hairdresser.domain.AuthorityEntity;
 import com.team.hairdresser.domain.Users;
 import com.team.hairdresser.dto.authority.AuthorityPageDto;
 import com.team.hairdresser.dto.authority.AuthorityRequestDto;
@@ -17,17 +17,17 @@ public interface AuthorityService {
 
     void update(Long authorityId, AuthorityRequestDto authorityRequestDto);
 
-    Authority getAuthority(Long authorityId);
+    AuthorityEntity getAuthority(Long authorityId);
 
-    List<Authority> readAll();
+    List<AuthorityEntity> readAll();
 
     void assignRoleAuthorities(RoleAuthorityRequestDto roleAuthorityRequestDto);
 
-    List<Authority> getUserAuthorities(Users users);
+    List<AuthorityEntity> getUserAuthorities(Users users);
 
-    List<Authority> getAnonymousUserAuthorities();
+    List<AuthorityEntity> getAnonymousUserAuthorities();
 
-    List<Authority> readAllAuthority();
+    List<AuthorityEntity> readAllAuthority();
 
     Page<AuthorityPageDto> getAll(PageableSearchFilterDto filterDto);
 

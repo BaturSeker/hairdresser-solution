@@ -1,7 +1,7 @@
 package com.team.hairdresser.config.security;
 
 
-import com.team.hairdresser.domain.Authority;
+import com.team.hairdresser.domain.AuthorityEntity;
 import com.team.hairdresser.domain.Users;
 import com.team.hairdresser.service.api.authority.AuthorityRules;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class CheckPermission {
                     newAuthorityList.addAll(addPermission(authorityCode));
                 }
                 Users user = (Users) authentication.getPrincipal();
-                List<Authority> authorities = authorityRules.getUserAuthorities(user);
+                List<AuthorityEntity> authorities = authorityRules.getUserAuthorities(user);
                 for (String childAuthority : newAuthorityList) {
                     boolean state = checkPermission(authorities, childAuthority);
                     if (state) return true;
@@ -51,8 +51,8 @@ public class CheckPermission {
         return false;
     }
 
-    private boolean checkPermission(Collection<Authority> list, String childAuthorizeCode) {
-        for (Authority authorize : list) {
+    private boolean checkPermission(Collection<AuthorityEntity> list, String childAuthorizeCode) {
+        for (AuthorityEntity authorize : list) {
             if (authorize.getAuthorityCode().equals(childAuthorizeCode))
                 return true;
             if (!authorize.getAuthorities().isEmpty()) {
@@ -67,9 +67,9 @@ public class CheckPermission {
         List<String> result = new ArrayList<>();
         result.add(childAuthorityCode);
         try {
-            Authority authority = authorityRules.findByAuthorityCode(childAuthorityCode);
-            for (Authority authorityDb : authority.getAuthorities()) {
-                result.addAll(addPermission(authorityDb.getAuthorityCode()));
+            AuthorityEntity authorityEntity = authorityRules.findByAuthorityCode(childAuthorityCode);
+            for (AuthorityEntity authorityEntityDb : authorityEntity.getAuthorities()) {
+                result.addAll(addPermission(authorityEntityDb.getAuthorityCode()));
             }
         } catch (Exception e) {
             LOGGER.error("addPermission() failed!", e);

@@ -13,17 +13,17 @@ public class RoleAuthority extends BaseEntity<Long> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "AuthorityId", nullable = false)
-    private Authority authority;
+    private AuthorityEntity authority;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RoleId", nullable = false)
     private Roles role;
 
-    public Authority getAuthority() {
+    public AuthorityEntity getAuthority() {
         return authority;
     }
 
-    public void setAuthority(Authority authority) {
+    public void setAuthority(AuthorityEntity authority) {
         this.authority = authority;
     }
 

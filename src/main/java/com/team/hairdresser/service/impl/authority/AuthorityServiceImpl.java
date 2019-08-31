@@ -43,30 +43,30 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_AUTHORITY + "')")
     public void save(AuthorityRequestDto authorityRequestDto) {
-        Authority authority = new Authority();
-        authority.setParentAuthority(authorityRepository.getOne(authorityRequestDto.getParentId()));
-        authority.setCreatedDate(CalendarHelper.getCurrentInstant());
-        authority.setMenu(authorityRequestDto.getMenu());
-        authority.setAuthorityCode(authorityRequestDto.getAuthorizeCode());
-        authority.setTitle(authorityRequestDto.getTitle());
-        authority.setUrl(authorityRequestDto.getUrl());
-        authority.setVisible(authorityRequestDto.getVisible());
-        authority.setIcon(authorityRequestDto.getIcon());
-        authorityRepository.save(authority);
+        AuthorityEntity authorityEntity = new AuthorityEntity();
+        authorityEntity.setParentAuthority(authorityRepository.getOne(authorityRequestDto.getParentId()));
+        authorityEntity.setCreatedDate(CalendarHelper.getCurrentInstant());
+        authorityEntity.setMenu(authorityRequestDto.getMenu());
+        authorityEntity.setAuthorityCode(authorityRequestDto.getAuthorizeCode());
+        authorityEntity.setTitle(authorityRequestDto.getTitle());
+        authorityEntity.setUrl(authorityRequestDto.getUrl());
+        authorityEntity.setVisible(authorityRequestDto.getVisible());
+        authorityEntity.setIcon(authorityRequestDto.getIcon());
+        authorityRepository.save(authorityEntity);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_AUTHORITY + "')")
     public void update(Long authorityId, AuthorityRequestDto authorityRequestDto) {
-        Authority authority = authorityRepository.getOne(authorityId);
+        AuthorityEntity authorityEntity = authorityRepository.getOne(authorityId);
 
-        if (Objects.equals(authority, null)) {
+        if (Objects.equals(authorityEntity, null)) {
             throw new NullObjectException(ExceptionMessages.AUTHORITY_NULL);
         }
         //this.cancelRoleAuthorityRelation(authorityId);
-        authority.setTitle(authorityRequestDto.getTitle());
-        authority.setIcon(authorityRequestDto.getIcon());
-        authorityRepository.save(authority);
+        authorityEntity.setTitle(authorityRequestDto.getTitle());
+        authorityEntity.setIcon(authorityRequestDto.getIcon());
+        authorityRepository.save(authorityEntity);
     }
 
     private void cancelRoleAuthorityRelation(Long authorityId) {
@@ -78,8 +78,8 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_AUTHORITY_MANAGEMENT + "')")
-    public Authority getAuthority(Long authorityId) {
-        Authority role = authorityRepository.getOne(authorityId);
+    public AuthorityEntity getAuthority(Long authorityId) {
+        AuthorityEntity role = authorityRepository.getOne(authorityId);
 
         if (role == null) {
             throw new NullObjectException(ExceptionMessages.ROLE_NULL);
@@ -89,7 +89,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_AUTHORITY_MANAGEMENT + "')")
-    public List<Authority> readAll() {
+    public List<AuthorityEntity> readAll() {
         return authorityRepository.findByParentAuthorityOrderById(null);
     }
 
@@ -108,7 +108,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_AUTHORITY_MANAGEMENT + "')")
-    public List<Authority> getUserAuthorities(Users users) {
+    public List<AuthorityEntity> getUserAuthorities(Users users) {
         Collection<UserRole> userRolesByUsersId = users.getUserRoles();
         List<Long> roleIds = new ArrayList<>();
         for (UserRole userRole : userRolesByUsersId) {
@@ -122,12 +122,12 @@ public class AuthorityServiceImpl implements AuthorityService {
             }
         }
 
-        List<Authority> allAuthority = this.authorityRepository.findByParentAuthorityOrderById(null);
-        return getAuthorities(allAuthority, authorityIds);
+        List<AuthorityEntity> allAuthorityEntity = this.authorityRepository.findByParentAuthorityOrderById(null);
+        return getAuthorities(allAuthorityEntity, authorityIds);
     }
 
     @Override
-    public List<Authority> getAnonymousUserAuthorities() {
+    public List<AuthorityEntity> getAnonymousUserAuthorities() {
         Roles role = roleRepository.findByName("AnonymousUser");
         Set<Long> authorityIds = new HashSet<>();
         List<RoleAuthority> roleAuthorities = roleAuthorityRepository.findAllByRole(roleRepository.getOne(role.getId()));
@@ -135,29 +135,29 @@ public class AuthorityServiceImpl implements AuthorityService {
             authorityIds.add(roleAuth.getAuthority().getId());
         }
 
-        List<Authority> allAuthority = this.authorityRepository.findByParentAuthorityOrderById(null);
-        return getAuthorities(allAuthority, authorityIds);
+        List<AuthorityEntity> allAuthorityEntity = this.authorityRepository.findByParentAuthorityOrderById(null);
+        return getAuthorities(allAuthorityEntity, authorityIds);
     }
 
     @Override
-    public List<Authority> readAllAuthority() {
+    public List<AuthorityEntity> readAllAuthority() {
         return IteratorUtils.toList(this.authorityRepository.findAll().iterator());
     }
 
     @Override
     public Page<AuthorityPageDto> getAll(PageableSearchFilterDto filterDto) {
 
-        SearchSpecificationBuilder<Authority> specificationBuilder =
-                SearchSpecificationBuilder.filterAllowedKeysInstance(Authority.class,
+        SearchSpecificationBuilder<AuthorityEntity> specificationBuilder =
+                SearchSpecificationBuilder.filterAllowedKeysInstance(AuthorityEntity.class,
                         "title");
 
-        Specification<Authority> builtSpecification = specificationBuilder.build(filterDto.getCriteriaList());
+        Specification<AuthorityEntity> builtSpecification = specificationBuilder.build(filterDto.getCriteriaList());
 
         PageRequestDto pageRequest = filterDto.getPageRequest();
         addSortRequestForCreatedOnDesc(pageRequest);
         PageRequest pageable = pageRequest.getSpringPageRequest();
 
-        Page<Authority> authorityPageResult = authorityRepository.findAll(builtSpecification, pageable);
+        Page<AuthorityEntity> authorityPageResult = authorityRepository.findAll(builtSpecification, pageable);
 
         List<AuthorityPageDto> authorityPageDtos = new ArrayList<>();
 
@@ -174,15 +174,15 @@ public class AuthorityServiceImpl implements AuthorityService {
         pageRequest.addSort(sortRequest);
     }
 
-    private void buildResultList(Page<Authority> authorityPageResult, List<AuthorityPageDto> authorityPageDtos) {
-        for (Authority authority : authorityPageResult) {
+    private void buildResultList(Page<AuthorityEntity> authorityPageResult, List<AuthorityPageDto> authorityPageDtos) {
+        for (AuthorityEntity authorityEntity : authorityPageResult) {
             AuthorityPageDto authorityPageDto = new AuthorityPageDto();
 
-            authorityPageDto.setAuthorityId(authority.getId());
-            authorityPageDto.setUrl(authority.getUrl());
-            authorityPageDto.setParentId(Objects.nonNull(authority.getParentAuthority()) ? authority.getParentAuthority().getId() : null);
-            authorityPageDto.setMenu(authority.getMenu());
-            authorityPageDto.setTitle(authority.getTitle());
+            authorityPageDto.setAuthorityId(authorityEntity.getId());
+            authorityPageDto.setUrl(authorityEntity.getUrl());
+            authorityPageDto.setParentId(Objects.nonNull(authorityEntity.getParentAuthority()) ? authorityEntity.getParentAuthority().getId() : null);
+            authorityPageDto.setMenu(authorityEntity.getMenu());
+            authorityPageDto.setTitle(authorityEntity.getTitle());
 
             authorityPageDtos.add(authorityPageDto);
         }
@@ -197,28 +197,28 @@ public class AuthorityServiceImpl implements AuthorityService {
             authorityIds.add(roleAuth.getAuthority().getId());
         }
 
-        List<Authority> allAuthority = this.authorityRepository.findByParentAuthorityOrderById(null);
-        List<Authority> authorities = getAuthorities(allAuthority, authorityIds);
+        List<AuthorityEntity> allAuthorityEntity = this.authorityRepository.findByParentAuthorityOrderById(null);
+        List<AuthorityEntity> authorities = getAuthorities(allAuthorityEntity, authorityIds);
 
         return AuthorityMapper.INSTANCE.entityListToDtoList(authorities);
     }
 
-    private List<Authority> getAuthorities(List<Authority> authorityListByDb, Set<Long> authorityIds) {
-        List<Authority> authorityList = new ArrayList<>();
-        for (Authority authority : authorityListByDb) {
-            if (authorityIds.contains(authority.getId())) {
-                authorityList.add(authority);
+    private List<AuthorityEntity> getAuthorities(List<AuthorityEntity> authorityEntityListByDb, Set<Long> authorityIds) {
+        List<AuthorityEntity> authorityEntityList = new ArrayList<>();
+        for (AuthorityEntity authorityEntity : authorityEntityListByDb) {
+            if (authorityIds.contains(authorityEntity.getId())) {
+                authorityEntityList.add(authorityEntity);
             } else {
-                if (authority.getAuthorities().size() > 0) {
-                    List<Authority> newAuthorities = getAuthorities(new ArrayList<>(authority.getAuthorities()), authorityIds);
+                if (authorityEntity.getAuthorities().size() > 0) {
+                    List<AuthorityEntity> newAuthorities = getAuthorities(new ArrayList<>(authorityEntity.getAuthorities()), authorityIds);
                     if (newAuthorities.size() > 0) {
-                        authority.setAuthorities(newAuthorities);
-                        authorityList.add(authority);
+                        authorityEntity.setAuthorities(newAuthorities);
+                        authorityEntityList.add(authorityEntity);
                     }
                 }
             }
         }
-        return authorityList;
+        return authorityEntityList;
     }
 
     @Autowired

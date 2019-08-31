@@ -2,7 +2,7 @@ package com.team.hairdresser.controller;
 
 
 import com.team.hairdresser.constant.SuccessMessages;
-import com.team.hairdresser.domain.Authority;
+import com.team.hairdresser.domain.AuthorityEntity;
 import com.team.hairdresser.dto.SuccessResponseDto;
 import com.team.hairdresser.dto.authority.*;
 import com.team.hairdresser.service.api.authority.AuthorityRules;
@@ -30,11 +30,11 @@ public class AuthorityController {
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAuthority(@PathVariable Long authorityId) {
 
-        Authority authority = authorityRules.read(authorityId);
+        AuthorityEntity authorityEntity = authorityRules.read(authorityId);
         AuthorityResponse authorityResponse = new AuthorityResponse();
         authorityResponse.setAuthorityId(authorityId);
-        authorityResponse.setTitle(authority.getTitle());
-        authorityResponse.setIcon(authority.getIcon());
+        authorityResponse.setTitle(authorityEntity.getTitle());
+        authorityResponse.setIcon(authorityEntity.getIcon());
         authorityResponse.setHasIcon(authorityRules.shouldIconExist(authorityId));
         return new ResponseEntity<>(authorityResponse, HttpStatus.OK);
     }
