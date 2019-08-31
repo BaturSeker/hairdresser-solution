@@ -6,7 +6,7 @@ import com.team.hairdresser.utils.abstracts.BaseEntity;
 import javax.persistence.*;
 
 @Entity
-public class UserLog extends BaseEntity<Long> {
+public class UserLogEntity extends BaseEntity<Long> {
 
     @Column(name = "IsSuccesful")
     private Boolean isSuccesful;

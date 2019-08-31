@@ -48,7 +48,7 @@ public class AuthorityEntity extends BaseEntity<Long> {
     private Collection<UserHistoryEntity> userHistories;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "authority")
-    private Collection<UserLog> userLogs;
+    private Collection<UserLogEntity> userLogEntitties;
 
     public String getTitle() {
         return title;
@@ -138,11 +138,11 @@ public class AuthorityEntity extends BaseEntity<Long> {
         this.userHistories = userHistories;
     }
 
-    public Collection<UserLog> getUserLogs() {
-        return userLogs;
+    public Collection<UserLogEntity> getUserLogs() {
+        return userLogEntitties;
     }
 
-    public void setUserLogs(Collection<UserLog> userLogs) {
-        this.userLogs = userLogs;
+    public void setUserLogs(Collection<UserLogEntity> userLogEntitties) {
+        this.userLogEntitties = userLogEntitties;
     }
 }
