@@ -70,9 +70,9 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     private void cancelRoleAuthorityRelation(Long authorityId) {
-        List<RoleAuthority> roleAuthorities = roleAuthorityRepository.findAllByAuthority(authorityRepository.getOne(authorityId));
-        for (RoleAuthority roleAuthority : roleAuthorities) {
-            roleAuthorityRepository.delete(roleAuthority);
+        List<RoleAuthorityEntity> roleAuthorities = roleAuthorityRepository.findAllByAuthority(authorityRepository.getOne(authorityId));
+        for (RoleAuthorityEntity roleAuthorityEntity : roleAuthorities) {
+            roleAuthorityRepository.delete(roleAuthorityEntity);
         }
     }
 
@@ -99,10 +99,10 @@ public class AuthorityServiceImpl implements AuthorityService {
         Roles role = roleRepository.getOne(roleAuthorityRequestDto.getRoleId());
         roleAuthorityRepository.deleteAllByRole(role);
         for (Long authorityId : roleAuthorityRequestDto.getAuthorityIds()) {
-            RoleAuthority roleAuthority = new RoleAuthority();
-            roleAuthority.setRole(role);
-            roleAuthority.setAuthority(authorityRepository.getOne(authorityId));
-            roleAuthorityRepository.save(roleAuthority);
+            RoleAuthorityEntity roleAuthorityEntity = new RoleAuthorityEntity();
+            roleAuthorityEntity.setRole(role);
+            roleAuthorityEntity.setAuthority(authorityRepository.getOne(authorityId));
+            roleAuthorityRepository.save(roleAuthorityEntity);
         }
     }
 
@@ -116,8 +116,8 @@ public class AuthorityServiceImpl implements AuthorityService {
         }
         Set<Long> authorityIds = new HashSet<>();
         for (Long roleId : roleIds) {
-            List<RoleAuthority> roleAuthorities = roleAuthorityRepository.findAllByRole(roleRepository.getOne(roleId));
-            for (RoleAuthority roleAuth : roleAuthorities) {
+            List<RoleAuthorityEntity> roleAuthorities = roleAuthorityRepository.findAllByRole(roleRepository.getOne(roleId));
+            for (RoleAuthorityEntity roleAuth : roleAuthorities) {
                 authorityIds.add(roleAuth.getAuthority().getId());
             }
         }
@@ -130,8 +130,8 @@ public class AuthorityServiceImpl implements AuthorityService {
     public List<AuthorityEntity> getAnonymousUserAuthorities() {
         Roles role = roleRepository.findByName("AnonymousUser");
         Set<Long> authorityIds = new HashSet<>();
-        List<RoleAuthority> roleAuthorities = roleAuthorityRepository.findAllByRole(roleRepository.getOne(role.getId()));
-        for (RoleAuthority roleAuth : roleAuthorities) {
+        List<RoleAuthorityEntity> roleAuthorities = roleAuthorityRepository.findAllByRole(roleRepository.getOne(role.getId()));
+        for (RoleAuthorityEntity roleAuth : roleAuthorities) {
             authorityIds.add(roleAuth.getAuthority().getId());
         }
 
@@ -190,10 +190,10 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     public List<AuthorityResponse> findAuthoritiesByRoleId(Long roleId) {
-        List<RoleAuthority> roleAuthorities = this.roleAuthorityRepository.findAllByRole(roleRepository.getOne(roleId));
+        List<RoleAuthorityEntity> roleAuthorities = this.roleAuthorityRepository.findAllByRole(roleRepository.getOne(roleId));
         Set<Long> authorityIds = new HashSet<>();
 
-        for (RoleAuthority roleAuth : roleAuthorities) {
+        for (RoleAuthorityEntity roleAuth : roleAuthorities) {
             authorityIds.add(roleAuth.getAuthority().getId());
         }
 

@@ -42,7 +42,7 @@ public class AuthorityEntity extends BaseEntity<Long> {
     private List<AuthorityEntity> authorities;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "authority")
-    private Collection<RoleAuthority> roleAuthorities;
+    private Collection<RoleAuthorityEntity> roleAuthorities;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "authority")
     private Collection<UserHistory> userHistories;
@@ -122,11 +122,11 @@ public class AuthorityEntity extends BaseEntity<Long> {
         this.authorities = authorities;
     }
 
-    public Collection<RoleAuthority> getRoleAuthorities() {
+    public Collection<RoleAuthorityEntity> getRoleAuthorities() {
         return roleAuthorities;
     }
 
-    public void setRoleAuthorities(Collection<RoleAuthority> roleAuthorities) {
+    public void setRoleAuthorities(Collection<RoleAuthorityEntity> roleAuthorities) {
         this.roleAuthorities = roleAuthorities;
     }
 

@@ -23,7 +23,7 @@ public class Roles extends BaseEntity<Long> {
     private Boolean isDeleted = Boolean.FALSE;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
-    private List<RoleAuthority> roleAuthorities = new ArrayList<>();
+    private List<RoleAuthorityEntity> roleAuthorities = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -49,11 +49,11 @@ public class Roles extends BaseEntity<Long> {
         isDeleted = deleted;
     }
 
-    public List<RoleAuthority> getRoleAuthorities() {
+    public List<RoleAuthorityEntity> getRoleAuthorities() {
         return roleAuthorities;
     }
 
-    public void setRoleAuthorities(List<RoleAuthority> roleAuthorities) {
+    public void setRoleAuthorities(List<RoleAuthorityEntity> roleAuthorities) {
         this.roleAuthorities = roleAuthorities;
     }
 }
