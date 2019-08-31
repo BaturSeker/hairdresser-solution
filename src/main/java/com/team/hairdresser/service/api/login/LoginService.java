@@ -5,9 +5,9 @@ import com.team.hairdresser.dto.login.LoginRequestDto;
 
 public interface LoginService {
 
-    UserEntity loggedIn(LoginRequestDto loginRequestDto) throws Exception;
+    UserEntity login(LoginRequestDto loginRequestDto) throws Exception;
 
-    UserEntity loggedInLDAP(LoginRequestDto loginRequestDto) throws Exception;
+    UserEntity loginLDAP(LoginRequestDto loginRequestDto) throws Exception;
 
 }
 

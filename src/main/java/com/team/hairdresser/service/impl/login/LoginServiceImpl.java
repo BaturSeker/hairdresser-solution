@@ -3,12 +3,14 @@ package com.team.hairdresser.service.impl.login;
 
 import com.team.hairdresser.constant.Constants;
 import com.team.hairdresser.constant.ExceptionMessages;
+import com.team.hairdresser.constant.ValidationMessages;
 import com.team.hairdresser.dao.UsersRepository;
 import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.login.LoginRequestDto;
 import com.team.hairdresser.service.api.login.LoginService;
 import com.team.hairdresser.utils.util.CalendarHelper;
 import com.team.hairdresser.utils.util.HashUtils;
+import com.team.hairdresser.utils.util.ValidationHelper;
 import com.team.hairdresser.utils.util.exception.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +28,9 @@ public class LoginServiceImpl implements LoginService {
     private HttpServletRequest httpServletRequest;
 
     @Override
-    public UserEntity loggedIn(LoginRequestDto loginRequestDto) throws Exception {
+    public UserEntity login(LoginRequestDto loginRequestDto) throws Exception {
+        controlLoggedIn(loginRequestDto);
+
         UserEntity user = usersRepository.findUsersByUsername(loginRequestDto.getUsername());
         if (user == null) {
             throw new ValidationException(ExceptionMessages.NO_SUCH_USER);
@@ -50,8 +54,29 @@ public class LoginServiceImpl implements LoginService {
         return user;
     }
 
+    private void controlLoggedIn(LoginRequestDto loginRequestDto) {
+
+        StringBuilder message = new StringBuilder();
+        boolean isValid = true;
+        if (!ValidationHelper.notEmpty(loginRequestDto.getPassword())) {
+            isValid = false;
+            message.append(ValidationMessages.LOGIN_PASSWORD_NOT_NULL);
+            message.append(System.lineSeparator());
+        }
+        if (!ValidationHelper.notEmpty(loginRequestDto.getUsername())) {
+            isValid = false;
+            message.append(ValidationMessages.LOGIN_USER_NAME_NOT_NULL);
+            message.append(System.lineSeparator());
+        }
+        if (!isValid) {
+            throw new ValidationException(message.toString());
+        }
+    }
+
     @Override
-    public UserEntity loggedInLDAP(LoginRequestDto loginRequestDto) throws Exception {
+    public UserEntity loginLDAP(LoginRequestDto loginRequestDto) throws Exception {
+        controlLoginLDAP(loginRequestDto);
+
         UserEntity user = usersRepository.findUsersByUsername(loginRequestDto.getUsername());
         if (user == null) {
             throw new ValidationException(ExceptionMessages.NO_SUCH_USER);
@@ -66,6 +91,24 @@ public class LoginServiceImpl implements LoginService {
         user.setLoginLockDate(null);
 
         return user;
+    }
+
+    private void controlLoginLDAP(LoginRequestDto loginRequestDto) {
+        StringBuilder message = new StringBuilder();
+        boolean isValid = true;
+        if (!ValidationHelper.notEmpty(loginRequestDto.getPassword())) {
+            isValid = false;
+            message.append(ValidationMessages.LOGIN_PASSWORD_NOT_NULL);
+            message.append(System.lineSeparator());
+        }
+        if (!ValidationHelper.notEmpty(loginRequestDto.getUsername())) {
+            isValid = false;
+            message.append(ValidationMessages.LOGIN_USER_NAME_NOT_NULL);
+            message.append(System.lineSeparator());
+        }
+        if (!isValid) {
+            throw new ValidationException(message.toString());
+        }
     }
 
     /**

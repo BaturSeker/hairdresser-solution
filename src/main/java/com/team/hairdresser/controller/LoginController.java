@@ -11,7 +11,7 @@ import com.team.hairdresser.dto.login.LoginResponseDto;
 import com.team.hairdresser.dto.login.LoginUserResponseDto;
 import com.team.hairdresser.service.api.authority.AuthorityService;
 import com.team.hairdresser.service.api.authority.AuthorizationService;
-import com.team.hairdresser.service.api.login.LoginRules;
+import com.team.hairdresser.service.api.login.LoginService;
 import com.team.hairdresser.utils.util.ClearSession;
 import com.team.hairdresser.utils.util.string.StringAppenderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping("rest/")
 public class LoginController {
-    private LoginRules loginRules;
+    private LoginService loginService;
     private AuthorizationService authorizationService;
     private AuthorityService authorityService;
     private JwtUtil jwtUtil;
@@ -42,7 +42,7 @@ public class LoginController {
 
         if (activeDirectoryHelper.getLdapConfig().getEnabled()) {
             if (activeDirectoryHelper.authenticate(loginRequestDto.getUsername(), loginRequestDto.getPassword())) {
-                UserEntity user = loginRules.loginLDAP(loginRequestDto);
+                UserEntity user = loginService.loginLDAP(loginRequestDto);
                 authorizationService.authorize(user);
                 List<AuthorityEntity> authorities = this.authorityService.getUserAuthorities(user);
                 LoginResponseDto loginResponseDto = new LoginResponseDto();
@@ -60,7 +60,7 @@ public class LoginController {
             }
 
         } else {
-            UserEntity user = loginRules.login(loginRequestDto);
+            UserEntity user = loginService.login(loginRequestDto);
             authorizationService.authorize(user);
             List<AuthorityEntity> authorities = this.authorityService.getUserAuthorities(user);
             LoginResponseDto loginResponseDto = new LoginResponseDto();
@@ -129,8 +129,8 @@ public class LoginController {
     }
 
     @Autowired
-    public void setLoginRules(LoginRules loginRules) {
-        this.loginRules = loginRules;
+    public void setLoginService(LoginService loginService) {
+        this.loginService = loginService;
     }
 
     @Autowired
@@ -146,6 +146,11 @@ public class LoginController {
     @Autowired
     public void setActiveDirectoryHelper(ActiveDirectoryHelper activeDirectoryHelper) {
         this.activeDirectoryHelper = activeDirectoryHelper;
+    }
+
+    @Autowired
+    public void setAuthorityService(AuthorityService authorityService) {
+        this.authorityService = authorityService;
     }
 }
 
