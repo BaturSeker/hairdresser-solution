@@ -45,7 +45,7 @@ public class AuthorityEntity extends BaseEntity<Long> {
     private Collection<RoleAuthorityEntity> roleAuthorities;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "authority")
-    private Collection<UserHistory> userHistories;
+    private Collection<UserHistoryEntity> userHistories;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "authority")
     private Collection<UserLog> userLogs;
@@ -130,11 +130,11 @@ public class AuthorityEntity extends BaseEntity<Long> {
         this.roleAuthorities = roleAuthorities;
     }
 
-    public Collection<UserHistory> getUserHistories() {
+    public Collection<UserHistoryEntity> getUserHistories() {
         return userHistories;
     }
 
-    public void setUserHistories(Collection<UserHistory> userHistories) {
+    public void setUserHistories(Collection<UserHistoryEntity> userHistories) {
         this.userHistories = userHistories;
     }
 
