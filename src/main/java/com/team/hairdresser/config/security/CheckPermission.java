@@ -3,7 +3,7 @@ package com.team.hairdresser.config.security;
 
 import com.team.hairdresser.domain.AuthorityEntity;
 import com.team.hairdresser.domain.UserEntity;
-import com.team.hairdresser.service.api.authority.AuthorityRules;
+import com.team.hairdresser.service.api.authority.AuthorityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class CheckPermission {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckPermission.class);
 
-    private AuthorityRules authorityRules;
+    private AuthorityService authorityService;
 
     public boolean hasPermission(Authentication authentication, String... authorityCodes) throws Exception {
         if (authentication != null) {
@@ -41,7 +41,7 @@ public class CheckPermission {
                     newAuthorityList.addAll(addPermission(authorityCode));
                 }
                 UserEntity user = (UserEntity) authentication.getPrincipal();
-                List<AuthorityEntity> authorities = authorityRules.getUserAuthorities(user);
+                List<AuthorityEntity> authorities = authorityService.getUserAuthorities(user);
                 for (String childAuthority : newAuthorityList) {
                     boolean state = checkPermission(authorities, childAuthority);
                     if (state) return true;
@@ -67,7 +67,7 @@ public class CheckPermission {
         List<String> result = new ArrayList<>();
         result.add(childAuthorityCode);
         try {
-            AuthorityEntity authorityEntity = authorityRules.findByAuthorityCode(childAuthorityCode);
+            AuthorityEntity authorityEntity = authorityService.findByAuthorityCode(childAuthorityCode);
             for (AuthorityEntity authorityEntityDb : authorityEntity.getAuthorities()) {
                 result.addAll(addPermission(authorityEntityDb.getAuthorityCode()));
             }
@@ -78,8 +78,8 @@ public class CheckPermission {
     }
 
     @Autowired
-    public void setAuthorityRules(AuthorityRules authorityRules) {
-        this.authorityRules = authorityRules;
+    public void setAuthorityService(AuthorityService authorityService) {
+        this.authorityService = authorityService;
     }
 }
 

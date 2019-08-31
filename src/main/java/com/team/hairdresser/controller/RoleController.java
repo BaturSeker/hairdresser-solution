@@ -7,7 +7,7 @@ import com.team.hairdresser.dto.SuccessResponseDto;
 import com.team.hairdresser.dto.role.RoleDto;
 import com.team.hairdresser.dto.role.RoleRequestDto;
 import com.team.hairdresser.dto.user.UserRoleRequestDto;
-import com.team.hairdresser.service.api.authority.AuthorityRules;
+import com.team.hairdresser.service.api.authority.AuthorityService;
 import com.team.hairdresser.service.api.role.RoleRules;
 import com.team.hairdresser.service.impl.role.RoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +23,14 @@ import java.util.List;
 @RequestMapping("/rest/roles/")
 public class RoleController {
     private RoleRules roleRules;
-    private AuthorityRules authorityRules;
+    private AuthorityService authorityService;
 
     @GetMapping(value = "{roleId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getRole(@PathVariable Long roleId) {
         RoleEntity role = roleRules.read(roleId);
         RoleDto roleDto = RoleMapper.INSTANCE.entityToDto(role);
-        roleDto.setRoleAuthorities(authorityRules.findAuthoritiesByRoleId(roleId));
+        roleDto.setRoleAuthorities(authorityService.findAuthoritiesByRoleId(roleId));
         return new ResponseEntity<>(roleDto, HttpStatus.OK);
     }
 
@@ -81,8 +81,8 @@ public class RoleController {
     }
 
     @Autowired
-    public void setAuthorityRules(AuthorityRules authorityRules) {
-        this.authorityRules = authorityRules;
+    public void setAuthorityService(AuthorityService authorityService) {
+        this.authorityService = authorityService;
     }
 }
 

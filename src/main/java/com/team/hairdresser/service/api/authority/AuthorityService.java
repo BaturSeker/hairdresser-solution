@@ -32,4 +32,10 @@ public interface AuthorityService {
     Page<AuthorityPageDto> getAll(PageableSearchFilterDto filterDto);
 
     List<AuthorityResponseDto> findAuthoritiesByRoleId(Long roleId);
+
+    AuthorityEntity read(Long authorityId);
+
+    boolean shouldIconExist(Long authorityId);
+
+    AuthorityEntity findByAuthorityCode(String authorityCode);
 }

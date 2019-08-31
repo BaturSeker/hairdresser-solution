@@ -9,8 +9,8 @@ import com.team.hairdresser.dto.authority.AuthorityResponseDto;
 import com.team.hairdresser.dto.login.LoginRequestDto;
 import com.team.hairdresser.dto.login.LoginResponseDto;
 import com.team.hairdresser.dto.login.LoginUserResponseDto;
-import com.team.hairdresser.service.api.authority.AuthorityListRules;
-import com.team.hairdresser.service.api.authority.AuthorityRules;
+import com.team.hairdresser.service.api.authority.AuthorityService;
+import com.team.hairdresser.service.api.authority.AuthorizationService;
 import com.team.hairdresser.service.api.login.LoginRules;
 import com.team.hairdresser.utils.util.ClearSession;
 import com.team.hairdresser.utils.util.string.StringAppenderUtil;
@@ -31,8 +31,8 @@ import java.util.List;
 @RequestMapping("rest/")
 public class LoginController {
     private LoginRules loginRules;
-    private AuthorityListRules authorityListRules;
-    private AuthorityRules authorityRules;
+    private AuthorizationService authorizationService;
+    private AuthorityService authorityService;
     private JwtUtil jwtUtil;
     private ActiveDirectoryHelper activeDirectoryHelper;
 
@@ -43,8 +43,8 @@ public class LoginController {
         if (activeDirectoryHelper.getLdapConfig().getEnabled()) {
             if (activeDirectoryHelper.authenticate(loginRequestDto.getUsername(), loginRequestDto.getPassword())) {
                 UserEntity user = loginRules.loginLDAP(loginRequestDto);
-                authorityListRules.authorize(user);
-                List<AuthorityEntity> authorities = this.authorityRules.getUserAuthorities(user);
+                authorizationService.authorize(user);
+                List<AuthorityEntity> authorities = this.authorityService.getUserAuthorities(user);
                 LoginResponseDto loginResponseDto = new LoginResponseDto();
                 loginResponseDto.setLoginUserResponseDto(getUserResponse(user));
                 loginResponseDto.setAuthorityResponseDto(getAuthorityResponse(authorities));
@@ -61,8 +61,8 @@ public class LoginController {
 
         } else {
             UserEntity user = loginRules.login(loginRequestDto);
-            authorityListRules.authorize(user);
-            List<AuthorityEntity> authorities = this.authorityRules.getUserAuthorities(user);
+            authorizationService.authorize(user);
+            List<AuthorityEntity> authorities = this.authorityService.getUserAuthorities(user);
             LoginResponseDto loginResponseDto = new LoginResponseDto();
             loginResponseDto.setLoginUserResponseDto(getUserResponse(user));
             loginResponseDto.setAuthorityResponseDto(getAuthorityResponse(authorities));
@@ -80,7 +80,7 @@ public class LoginController {
     @GetMapping("getAnonymousUserAuthorities")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getCustomerUserAuthorities() {
-        List<AuthorityEntity> authorities = this.authorityRules.getAnonymousUserAuthorities();
+        List<AuthorityEntity> authorities = this.authorityService.getAnonymousUserAuthorities();
         List<AuthorityResponseDto> authorityResponseDto = getAuthorityResponse(authorities);
         return new ResponseEntity<>(authorityResponseDto, HttpStatus.OK);
     }
@@ -134,13 +134,8 @@ public class LoginController {
     }
 
     @Autowired
-    public void setAuthorityListRules(AuthorityListRules authorityListRules) {
-        this.authorityListRules = authorityListRules;
-    }
-
-    @Autowired
-    public void setAuthorityRules(AuthorityRules authorityRules) {
-        this.authorityRules = authorityRules;
+    public void setAuthorizationService(AuthorizationService authorizationService) {
+        this.authorizationService = authorizationService;
     }
 
     @Autowired

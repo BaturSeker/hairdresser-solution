@@ -2,13 +2,13 @@ package com.team.hairdresser.controller;
 
 
 import com.team.hairdresser.constant.SuccessMessages;
-import com.team.hairdresser.domain.UserRoleEntity;
 import com.team.hairdresser.domain.UserEntity;
+import com.team.hairdresser.domain.UserRoleEntity;
 import com.team.hairdresser.dto.SuccessResponseDto;
 import com.team.hairdresser.dto.password.ResetPasswordDto;
 import com.team.hairdresser.dto.user.UserInfoResponseDto;
 import com.team.hairdresser.dto.user.UserResponseDto;
-import com.team.hairdresser.service.api.authority.AuthorityListRules;
+import com.team.hairdresser.service.api.authority.AuthorizationService;
 import com.team.hairdresser.service.api.password.PasswordRules;
 import com.team.hairdresser.service.api.user.UserRules;
 import com.team.hairdresser.utils.pageablesearch.model.PageRequestDto;
@@ -35,7 +35,7 @@ public class UserController {
 
     private UserRules userRules;
     private PasswordRules passwordRules;
-    private AuthorityListRules authorityListRules;
+    private AuthorizationService authorizationService;
 
     @GetMapping("{userId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
@@ -69,7 +69,7 @@ public class UserController {
     @PostMapping("getAuthorizeList{userId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAuthorizeList(@Valid @RequestBody Long userId) {
-        List<UserRoleEntity> userRoleEntityList = authorityListRules.getAuthorizeList(userId);
+        List<UserRoleEntity> userRoleEntityList = authorizationService.getAuthorizeList(userId);
         return new ResponseEntity<>(userRoleEntityList, HttpStatus.OK);
     }
 
@@ -135,8 +135,8 @@ public class UserController {
     }
 
     @Autowired
-    public void setAuthorityListRules(AuthorityListRules authorityListRules) {
-        this.authorityListRules = authorityListRules;
+    public void setAuthorizationService(AuthorizationService authorizationService) {
+        this.authorizationService = authorizationService;
     }
 }
 

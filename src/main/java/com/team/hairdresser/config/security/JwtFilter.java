@@ -3,7 +3,7 @@ package com.team.hairdresser.config.security;
 
 import com.team.hairdresser.dao.UsersRepository;
 import com.team.hairdresser.domain.UserEntity;
-import com.team.hairdresser.service.api.authority.AuthorityListRules;
+import com.team.hairdresser.service.api.authority.AuthorizationService;
 import com.team.hairdresser.service.impl.token.UserTokenHolderServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private JwtUtil jwtUtil;
     private UsersRepository usersRepository;
-    private AuthorityListRules authorityListRules;
+    private AuthorizationService authorizationService;
     private UserTokenHolderServiceImpl userTokenHolderService;
 
     @Override
@@ -60,7 +60,7 @@ public class JwtFilter extends OncePerRequestFilter {
             UserEntity user = this.usersRepository.findUsersByUsername(username);
             if (jwtUtil.validateToken(authToken, user.getUsername())) {
 
-                authorityListRules.authorize(user);
+                authorizationService.authorize(user);
                 log.info("authorizated user '{}', setting security context", username);
 
             }
@@ -70,8 +70,8 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     @Autowired
-    public void setAuthorityListRules(AuthorityListRules authorityListRules) {
-        this.authorityListRules = authorityListRules;
+    public void setAuthorityListRules(AuthorizationService authorizationService) {
+        this.authorizationService = authorizationService;
     }
 
     @Autowired

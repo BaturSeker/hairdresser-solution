@@ -3,6 +3,7 @@ package com.team.hairdresser.service.impl.authority;
 
 import com.team.hairdresser.constant.AuthorityCodes;
 import com.team.hairdresser.constant.ExceptionMessages;
+import com.team.hairdresser.constant.ValidationMessages;
 import com.team.hairdresser.dao.AuthorityRepository;
 import com.team.hairdresser.dao.RoleAuthorityRepository;
 import com.team.hairdresser.dao.RoleRepository;
@@ -17,7 +18,9 @@ import com.team.hairdresser.utils.pageablesearch.model.PageRequestDto;
 import com.team.hairdresser.utils.pageablesearch.model.PageableSearchFilterDto;
 import com.team.hairdresser.utils.pageablesearch.specification.SearchSpecificationBuilder;
 import com.team.hairdresser.utils.util.CalendarHelper;
+import com.team.hairdresser.utils.util.ValidationHelper;
 import com.team.hairdresser.utils.util.exception.NullObjectException;
+import com.team.hairdresser.utils.util.exception.ValidationException;
 import org.apache.commons.collections4.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +31,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -43,6 +48,43 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_AUTHORITY + "')")
     public void save(AuthorityRequestDto authorityRequestDto) {
+        StringBuilder messages = new StringBuilder();
+        boolean isValid = true;
+        if (!Objects.nonNull(authorityRequestDto.getTitle())) {
+            isValid = false;
+            messages.append(ValidationMessages.AUTHORITY_TITLE_NOT_NULL);
+            messages.append(System.lineSeparator());
+        }
+        if (!Objects.nonNull(authorityRequestDto.getIcon())) {
+            isValid = false;
+            messages.append(ValidationMessages.AUTHORITY_ICON_NOT_NULL);
+            messages.append(System.lineSeparator());
+        }
+        if (!Objects.nonNull(authorityRequestDto.getUrl())) {
+            isValid = false;
+            messages.append(ValidationMessages.AUTHORITY_URL_NOT_NULL);
+            messages.append(System.lineSeparator());
+        }
+        if (!Objects.nonNull(authorityRequestDto.getAuthorizeCode())) {
+            isValid = false;
+            messages.append(ValidationMessages.AUTHORITY_AUTHORIZE_CODE_NOT_NULL);
+            messages.append(System.lineSeparator());
+        }
+        if (!Objects.nonNull(authorityRequestDto.getMenu())) {
+            isValid = false;
+            messages.append(ValidationMessages.AUTHORITY_IS_MENU_NOT_NULL);
+            messages.append(System.lineSeparator());
+        }
+        if (!Objects.nonNull(authorityRequestDto.getVisible())) {
+            isValid = false;
+            messages.append(ValidationMessages.AUTHORITY_IS_VISIBLE_NOT_NULL);
+            messages.append(System.lineSeparator());
+        }
+
+        if (!isValid) {
+            throw new ValidationException(messages.toString());
+        }
+
         AuthorityEntity authorityEntity = new AuthorityEntity();
         authorityEntity.setParentAuthorityEntity(authorityRepository.getOne(authorityRequestDto.getParentId()));
         authorityEntity.setCreatedDate(CalendarHelper.getCurrentInstant());
@@ -58,6 +100,29 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_AUTHORITY + "')")
     public void update(Long authorityId, AuthorityRequestDto authorityRequestDto) {
+        StringBuilder messages = new StringBuilder();
+        boolean isValid = true;
+        if (!Objects.nonNull(authorityRequestDto)) {
+            messages.append(ValidationMessages.AUTHORITY_NOT_NULL);
+            messages.append(System.lineSeparator());
+            throw new ValidationException(messages.toString());
+        }
+        if (shouldIconExist(authorityId)) {
+            if (!ValidationHelper.isValid(authorityRequestDto.getIcon())) {
+                isValid = false;
+                messages.append(ValidationMessages.AUTHORITY_ICON_NOT_NULL);
+                messages.append(System.lineSeparator());
+            }
+        }
+        if (!ValidationHelper.isValid(authorityId)) {
+            isValid = false;
+            messages.append(ValidationMessages.AUTHORITY_ID_NOT_NULL);
+            messages.append(System.lineSeparator());
+        }
+        if (!isValid) {
+            throw new ValidationException(messages.toString());
+        }
+
         AuthorityEntity authorityEntity = authorityRepository.getOne(authorityId);
 
         if (Objects.equals(authorityEntity, null)) {
@@ -96,6 +161,23 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_ROLE_AUTHORITIES + "')")
     public void assignRoleAuthorities(RoleAuthorityRequestDto roleAuthorityRequestDto) {
+        StringBuilder messages = new StringBuilder();
+        boolean isValid = true;
+        if (!ValidationHelper.isValid(roleAuthorityRequestDto.getRoleId())) {
+            isValid = false;
+            messages.append(ValidationMessages.ROLE_ID_NOT_NULL);
+            messages.append(System.lineSeparator());
+        }
+        if (!ValidationHelper.isValid(roleAuthorityRequestDto.getAuthorityIds())) {
+            isValid = false;
+            messages.append(ValidationMessages.AUTHORITY_ID_LIST_NOT_NULL);
+            messages.append(System.lineSeparator());
+        }
+
+        if (!isValid) {
+            throw new ValidationException(messages.toString());
+        }
+
         RoleEntity role = roleRepository.getOne(roleAuthorityRequestDto.getRoleId());
         roleAuthorityRepository.deleteAllByRoleEntity(role);
         for (Long authorityId : roleAuthorityRequestDto.getAuthorityIds()) {
@@ -219,6 +301,41 @@ public class AuthorityServiceImpl implements AuthorityService {
             }
         }
         return authorityEntityList;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public boolean shouldIconExist(Long authorityId) {
+        AuthorityEntity authorityEntity = read(authorityId);
+        if (authorityEntity.getParentAuthorityEntity() != null) {
+            AuthorityEntity parent = authorityEntity.getParentAuthorityEntity();
+            if (parent.getParentAuthorityEntity() == null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public AuthorityEntity read(Long authorityId) {
+        StringBuilder message = new StringBuilder();
+        boolean isValid = true;
+        if (!ValidationHelper.isValid(authorityId)) {
+            isValid = false;
+            message.append(ValidationMessages.AUTHORITY_ID_NOT_NULL);
+            message.append(System.lineSeparator());
+        }
+        if (!isValid) {
+            throw new ValidationException(message.toString());
+        }
+        return getAuthority(authorityId);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public AuthorityEntity findByAuthorityCode(String authorityCode) {
+        return null;
     }
 
     @Autowired

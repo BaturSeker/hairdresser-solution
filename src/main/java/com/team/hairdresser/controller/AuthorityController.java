@@ -5,7 +5,6 @@ import com.team.hairdresser.constant.SuccessMessages;
 import com.team.hairdresser.domain.AuthorityEntity;
 import com.team.hairdresser.dto.SuccessResponseDto;
 import com.team.hairdresser.dto.authority.*;
-import com.team.hairdresser.service.api.authority.AuthorityRules;
 import com.team.hairdresser.service.api.authority.AuthorityService;
 import com.team.hairdresser.service.impl.authority.AuthorityMapper;
 import com.team.hairdresser.service.impl.authority.AuthorityResponseDtoMapper;
@@ -23,19 +22,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/rest/authority/")
 public class AuthorityController {
-    private AuthorityRules authorityRules;
     private AuthorityService authorityService;
 
     @GetMapping(value = "{authorityId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAuthority(@PathVariable Long authorityId) {
 
-        AuthorityEntity authorityEntity = authorityRules.read(authorityId);
+        AuthorityEntity authorityEntity = authorityService.read(authorityId);
         AuthorityResponseDto authorityResponseDto = new AuthorityResponseDto();
         authorityResponseDto.setAuthorityId(authorityId);
         authorityResponseDto.setTitle(authorityEntity.getTitle());
         authorityResponseDto.setIcon(authorityEntity.getIcon());
-        authorityResponseDto.setHasIcon(authorityRules.shouldIconExist(authorityId));
+        authorityResponseDto.setHasIcon(authorityService.shouldIconExist(authorityId));
         return new ResponseEntity<>(authorityResponseDto, HttpStatus.OK);
     }
 
@@ -43,35 +41,35 @@ public class AuthorityController {
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity updateAuthority(@PathVariable Long authorityId, @Valid @RequestBody AuthorityRequestDto authorityRequestDto) {
 
-        authorityRules.update(authorityId, authorityRequestDto);
+        authorityService.update(authorityId, authorityRequestDto);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.AUTHORITY_UPDATE_TITLE, SuccessMessages.AUTHORITY_UPDATE_MESSAGE), HttpStatus.OK);
     }
 
     @PostMapping(value = "save")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity saveAuthority(@Valid @RequestBody AuthorityRequestDto authorityRequestDto) {
-        authorityRules.save(authorityRequestDto);
+        authorityService.save(authorityRequestDto);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.AUTHORITY_CREATE_TITLE, SuccessMessages.AUTHORITY_CREATE_MESSAGE), HttpStatus.OK);
     }
 
     @PostMapping(value = "assignRoleAuthorities")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity assignRoleAuthorities(@Valid @RequestBody RoleAuthorityRequestDto roleAuthorityRequestDto) {
-        authorityRules.assignRoleAuthorities(roleAuthorityRequestDto);
+        authorityService.assignRoleAuthorities(roleAuthorityRequestDto);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.AUTHORITY_ASSIGN_TITLE, SuccessMessages.AUTHORITY_ASSIGN_MESSAGE), HttpStatus.OK);
     }
 
     @GetMapping(value = "getAllAuthorities")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAllAuthorities() {
-        List<AuthorityResponseDto> authorityResponsDtos = AuthorityMapper.INSTANCE.entityListToDtoList(authorityRules.readAll());
+        List<AuthorityResponseDto> authorityResponsDtos = AuthorityMapper.INSTANCE.entityListToDtoList(authorityService.readAll());
         return new ResponseEntity<>(authorityResponsDtos, HttpStatus.OK);
     }
 
     @GetMapping(value = "getAll")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAll() {
-        List<AuthoritySimpleResponseDto> authoritySimpleResponseDtos = AuthorityResponseDtoMapper.INSTANCE.entityListToDtoList(authorityRules.readAllAuthority());
+        List<AuthoritySimpleResponseDto> authoritySimpleResponseDtos = AuthorityResponseDtoMapper.INSTANCE.entityListToDtoList(authorityService.readAllAuthority());
         return new ResponseEntity<>(authoritySimpleResponseDtos, HttpStatus.OK);
     }
 
@@ -80,11 +78,6 @@ public class AuthorityController {
     public ResponseEntity<Page<AuthorityPageDto>> getAuthorityPage(@RequestBody PageableSearchFilterDto pageRequest) {
         Page<AuthorityPageDto> response = authorityService.getAll(pageRequest);
         return ResponseEntity.ok(response);
-    }
-
-    @Autowired
-    public void setAuthorityRules(AuthorityRules authorityRules) {
-        this.authorityRules = authorityRules;
     }
 
     @Autowired
