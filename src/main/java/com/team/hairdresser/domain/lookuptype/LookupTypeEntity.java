@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class LookupType extends BaseEntity<Integer> {
+public class LookupTypeEntity extends BaseEntity<Integer> {
 
     @Column(name = "name")
     private String name;
@@ -17,8 +17,8 @@ public class LookupType extends BaseEntity<Integer> {
     @Column(name = "TypeEnum")
     private LookupTypeEnum typeEnum;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lookupType", cascade = CascadeType.ALL)
-    private List<LookupValue> lookupValues = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lookupTypeEntity", cascade = CascadeType.ALL)
+    private List<LookupValueEntity> lookupValueEntities = new ArrayList<>();
 
     public Integer getLookupTypeId() {
         return this.getId();
@@ -36,12 +36,12 @@ public class LookupType extends BaseEntity<Integer> {
         this.name = type;
     }
 
-    public List<LookupValue> getLookupValues() {
-        return lookupValues;
+    public List<LookupValueEntity> getLookupValueEntities() {
+        return lookupValueEntities;
     }
 
-    public void setLookupValues(List<LookupValue> lookupValues) {
-        this.lookupValues = lookupValues;
+    public void setLookupValueEntities(List<LookupValueEntity> lookupValueEntities) {
+        this.lookupValueEntities = lookupValueEntities;
     }
 
     public LookupTypeEnum getTypeEnum() {

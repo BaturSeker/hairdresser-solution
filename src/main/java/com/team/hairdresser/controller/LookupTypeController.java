@@ -2,8 +2,8 @@ package com.team.hairdresser.controller;
 
 
 import com.team.hairdresser.constant.SuccessMessages;
-import com.team.hairdresser.domain.lookuptype.LookupType;
-import com.team.hairdresser.domain.lookuptype.LookupValue;
+import com.team.hairdresser.domain.lookuptype.LookupTypeEntity;
+import com.team.hairdresser.domain.lookuptype.LookupValueEntity;
 import com.team.hairdresser.dto.SuccessResponseDto;
 import com.team.hairdresser.dto.lookuptype.LookupTypeDto;
 import com.team.hairdresser.dto.lookuptype.LookupValueDto;
@@ -60,24 +60,24 @@ public class LookupTypeController {
     @GetMapping(value = "value/{lookupValueId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity readValue(@PathVariable Integer lookupValueId) {
-        LookupValue lookupValue = lookupValueRules.read(lookupValueId);
-        LookupValueDto lookupValueDto = LookupValueMapper.INSTANCE.entityToDto(lookupValue);
+        LookupValueEntity lookupValueEntity = lookupValueRules.read(lookupValueId);
+        LookupValueDto lookupValueDto = LookupValueMapper.INSTANCE.entityToDto(lookupValueEntity);
         return new ResponseEntity<>(lookupValueDto, HttpStatus.OK);
     }
 
     @GetMapping(value = "{lookupTypeId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity readType(@PathVariable Integer lookupTypeId) {
-        LookupType lookupType = lookupTypeRules.read(lookupTypeId);
-        LookupTypeDto lookupTypeDto = LookupTypeMapper.INSTANCE.entityToDto(lookupType);
+        LookupTypeEntity lookupTypeEntity = lookupTypeRules.read(lookupTypeId);
+        LookupTypeDto lookupTypeDto = LookupTypeMapper.INSTANCE.entityToDto(lookupTypeEntity);
         return new ResponseEntity<>(lookupTypeDto, HttpStatus.OK);
     }
 
     @GetMapping("getAll")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity readType() {
-        List<LookupType> lookupTypes = lookupTypeRules.readAll();
-        List<LookupTypeDto> lookupTypeDtos = LookupTypeMapper.INSTANCE.entityListToDtoList(lookupTypes);
+        List<LookupTypeEntity> lookupTypeEntities = lookupTypeRules.readAll();
+        List<LookupTypeDto> lookupTypeDtos = LookupTypeMapper.INSTANCE.entityListToDtoList(lookupTypeEntities);
         return new ResponseEntity<>(lookupTypeDtos, HttpStatus.OK);
     }
 

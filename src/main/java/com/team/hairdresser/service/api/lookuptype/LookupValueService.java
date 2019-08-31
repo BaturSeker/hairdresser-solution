@@ -1,7 +1,7 @@
 package com.team.hairdresser.service.api.lookuptype;
 
 import com.team.hairdresser.constant.LookupTypeEnum;
-import com.team.hairdresser.domain.lookuptype.LookupValue;
+import com.team.hairdresser.domain.lookuptype.LookupValueEntity;
 import com.team.hairdresser.dto.lookuptype.LookupValueDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,17 +14,17 @@ public interface LookupValueService {
 
     Page<LookupValueDto> getValuesByLookupTypeEnum(LookupTypeEnum typeEnum, Pageable pageRequest);
 
-    LookupValue save(LookupValueDto lookupValueDto);
+    LookupValueEntity save(LookupValueDto lookupValueDto);
 
-    LookupValue update(Integer lookupValueId, String value);
+    LookupValueEntity update(Integer lookupValueId, String value);
 
-    LookupValue read(Integer lookupValueId);
+    LookupValueEntity read(Integer lookupValueId);
 
-    List<LookupValue> readAll();
+    List<LookupValueEntity> readAll();
 
-    List<LookupValue> readAllByLookupTypeId(Integer lookupTypeId);
+    List<LookupValueEntity> readAllByLookupTypeId(Integer lookupTypeId);
 
-    List<LookupValue> readAllIcon();
+    List<LookupValueEntity> readAllIcon();
 
     List getComboLookupValues(Integer lookupTypeId);
 

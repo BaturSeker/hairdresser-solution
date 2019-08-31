@@ -4,8 +4,8 @@ package com.team.hairdresser.service.impl.lookuptype;
 import com.team.hairdresser.constant.LookupTypeEnum;
 import com.team.hairdresser.dao.LookupTypeRepository;
 import com.team.hairdresser.dao.LookupValueRepository;
-import com.team.hairdresser.domain.lookuptype.LookupType;
-import com.team.hairdresser.domain.lookuptype.LookupValue;
+import com.team.hairdresser.domain.lookuptype.LookupTypeEntity;
+import com.team.hairdresser.domain.lookuptype.LookupValueEntity;
 import com.team.hairdresser.dto.lookuptype.LookupTypeDto;
 import com.team.hairdresser.dto.lookuptype.LookupValueDto;
 import com.team.hairdresser.service.api.lookuptype.LookupTypeService;
@@ -31,44 +31,44 @@ public class LookupTypeServiceImpl implements LookupTypeService {
     private LookupValueRepository lookupValueRepository;
 
     @Override
-    public LookupType save(LookupTypeDto lookupTypeDto) {
-        LookupType lookupType = new LookupType();
-        lookupType.setName(lookupTypeDto.getName());
-        lookupType.setTypeEnum(LookupTypeEnum.fromLookupTypeEnumId(lookupTypeDto.getLookupTypeEnumId()));
+    public LookupTypeEntity save(LookupTypeDto lookupTypeDto) {
+        LookupTypeEntity lookupTypeEntity = new LookupTypeEntity();
+        lookupTypeEntity.setName(lookupTypeDto.getName());
+        lookupTypeEntity.setTypeEnum(LookupTypeEnum.fromLookupTypeEnumId(lookupTypeDto.getLookupTypeEnumId()));
 
         for (LookupValueDto valueDto : lookupTypeDto.getLookupValues()) {
-            LookupValue lookupValue = LookupValueMapper.INSTANCE.dtoToEntity(valueDto);
-            lookupValue.setLookupType(lookupType);
-            lookupType.getLookupValues().add(lookupValue);
+            LookupValueEntity lookupValueEntity = LookupValueMapper.INSTANCE.dtoToEntity(valueDto);
+            lookupValueEntity.setLookupTypeEntity(lookupTypeEntity);
+            lookupTypeEntity.getLookupValueEntities().add(lookupValueEntity);
         }
 
-        return lookupTypeRepository.saveAndFlush(lookupType);
+        return lookupTypeRepository.saveAndFlush(lookupTypeEntity);
     }
 
     @Override
-    public LookupType getLookupType(Integer lookupTypeId) {
+    public LookupTypeEntity getLookupType(Integer lookupTypeId) {
         return this.lookupTypeRepository.getOne(lookupTypeId);
     }
 
     @Override
-    public List<LookupType> readAll() {
+    public List<LookupTypeEntity> readAll() {
         return this.lookupTypeRepository.findAll();
     }
 
     @Override
     public Page<LookupTypeDto> getAll(PageableSearchFilterDto filterDto) {
 
-        SearchSpecificationBuilder<LookupType> specificationBuilder =
-                SearchSpecificationBuilder.filterAllowedKeysInstance(LookupType.class,
+        SearchSpecificationBuilder<LookupTypeEntity> specificationBuilder =
+                SearchSpecificationBuilder.filterAllowedKeysInstance(LookupTypeEntity.class,
                         "name");
 
-        Specification<LookupType> builtSpecification = specificationBuilder.build(filterDto.getCriteriaList());
+        Specification<LookupTypeEntity> builtSpecification = specificationBuilder.build(filterDto.getCriteriaList());
 
         PageRequestDto pageRequest = filterDto.getPageRequest();
 
         PageRequest pageable = pageRequest.getSpringPageRequest();
 
-        Page<LookupType> lookupTypePageResult = lookupTypeRepository.findAll(builtSpecification, pageable);
+        Page<LookupTypeEntity> lookupTypePageResult = lookupTypeRepository.findAll(builtSpecification, pageable);
 
         List<LookupTypeDto> lookupTypePageDtos = new ArrayList<>();
 
@@ -78,23 +78,23 @@ public class LookupTypeServiceImpl implements LookupTypeService {
         return new PageImpl<>(lookupTypePageDtos, pageable, totalCount);
     }
 
-    private void buildResultList(Page<LookupType> lookupTypePageResult, List<LookupTypeDto> lookupTypePageDtos) {
-        for (LookupType lookupType : lookupTypePageResult) {
+    private void buildResultList(Page<LookupTypeEntity> lookupTypePageResult, List<LookupTypeDto> lookupTypePageDtos) {
+        for (LookupTypeEntity lookupTypeEntity : lookupTypePageResult) {
             LookupTypeDto lookupTypeDto = new LookupTypeDto();
 
-            lookupTypeDto.setLookupTypeId(lookupType.getLookupTypeId());
-            lookupTypeDto.setName(lookupType.getName());
-            lookupTypeDto.setLookupTypeEnumId(Objects.nonNull(lookupType.getTypeEnum()) ? lookupType.getTypeEnum().getLookupTypeEnumId() : null);
+            lookupTypeDto.setLookupTypeId(lookupTypeEntity.getLookupTypeId());
+            lookupTypeDto.setName(lookupTypeEntity.getName());
+            lookupTypeDto.setLookupTypeEnumId(Objects.nonNull(lookupTypeEntity.getTypeEnum()) ? lookupTypeEntity.getTypeEnum().getLookupTypeEnumId() : null);
 
             List<LookupValueDto> lookupValueDtos = new ArrayList<>();
 
-            for (LookupValue lookupValue : lookupType.getLookupValues()) {
+            for (LookupValueEntity lookupValueEntity : lookupTypeEntity.getLookupValueEntities()) {
 
                 LookupValueDto lookupValueDto = new LookupValueDto();
-                lookupValueDto.setLookupValueId(lookupValue.getLookupValueId());
-                lookupValueDto.setLookupTypeId(Objects.nonNull(lookupValue.getLookupType()) ? lookupValue.getLookupType().getLookupTypeId() : null);
-                lookupValueDto.setValue(lookupValue.getValue());
-                lookupValueDto.setActive(lookupValue.getActive());
+                lookupValueDto.setLookupValueId(lookupValueEntity.getLookupValueId());
+                lookupValueDto.setLookupTypeId(Objects.nonNull(lookupValueEntity.getLookupTypeEntity()) ? lookupValueEntity.getLookupTypeEntity().getLookupTypeId() : null);
+                lookupValueDto.setValue(lookupValueEntity.getValue());
+                lookupValueDto.setActive(lookupValueEntity.getActive());
 
                 lookupValueDtos.add(lookupValueDto);
 
@@ -105,10 +105,10 @@ public class LookupTypeServiceImpl implements LookupTypeService {
     }
 
     @Override
-    public LookupType update(Integer lookupTypeId, LookupTypeDto lookupTypeDto) {
-        LookupType lookupType = this.lookupTypeRepository.getOne(lookupTypeId);
-        lookupType.setName(lookupTypeDto.getName());
-        return this.lookupTypeRepository.saveAndFlush(lookupType);
+    public LookupTypeEntity update(Integer lookupTypeId, LookupTypeDto lookupTypeDto) {
+        LookupTypeEntity lookupTypeEntity = this.lookupTypeRepository.getOne(lookupTypeId);
+        lookupTypeEntity.setName(lookupTypeDto.getName());
+        return this.lookupTypeRepository.saveAndFlush(lookupTypeEntity);
     }
 
     @Autowired

@@ -1,7 +1,7 @@
 package com.team.hairdresser.service.impl.lookuptype;
 
 import com.team.hairdresser.config.mapper.GeneralMapStructConfig;
-import com.team.hairdresser.domain.lookuptype.LookupValue;
+import com.team.hairdresser.domain.lookuptype.LookupValueEntity;
 import com.team.hairdresser.dto.lookuptype.LookupValueDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,16 +15,16 @@ public interface LookupValueMapper {
 
     LookupValueMapper INSTANCE = Mappers.getMapper(LookupValueMapper.class);
 
-    LookupValue dtoToEntity(LookupValueDto lookupValueDto);
+    LookupValueEntity dtoToEntity(LookupValueDto lookupValueDto);
 
     @Mapping(source = "lookupType.lookupTypeId", target = "lookupTypeId")
-    LookupValueDto entityToDto(LookupValue lookupValue);
+    LookupValueDto entityToDto(LookupValueEntity lookupValueEntity);
 
-    List<LookupValue> dtoListToEntityList(List<LookupValueDto> lookupValueDtos);
+    List<LookupValueEntity> dtoListToEntityList(List<LookupValueDto> lookupValueDtos);
 
-    List<LookupValueDto> entityListToDtoList(List<LookupValue> lookupValues);
+    List<LookupValueDto> entityListToDtoList(List<LookupValueEntity> lookupValueEntities);
 
-    default Page<LookupValueDto> entityPageToDtoPage(Page<LookupValue> lookupValues) {
+    default Page<LookupValueDto> entityPageToDtoPage(Page<LookupValueEntity> lookupValues) {
         return lookupValues.map(this::entityToDto);
     }
 }

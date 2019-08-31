@@ -6,7 +6,7 @@ import com.team.hairdresser.utils.abstracts.BaseEntity;
 import javax.persistence.*;
 
 @Entity
-public class LookupValue extends BaseEntity<Integer> {
+public class LookupValueEntity extends BaseEntity<Integer> {
 
     @Column(name = "Value")
     private String value;
@@ -16,7 +16,7 @@ public class LookupValue extends BaseEntity<Integer> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LookupTypeId")
-    private LookupType lookupType;
+    private LookupTypeEntity lookupTypeEntity;
 
     public Boolean getActive() {
         return isActive;
@@ -42,12 +42,12 @@ public class LookupValue extends BaseEntity<Integer> {
         this.setId(genericTypeValueId);
     }
 
-    public LookupType getLookupType() {
-        return lookupType;
+    public LookupTypeEntity getLookupTypeEntity() {
+        return lookupTypeEntity;
     }
 
-    public void setLookupType(LookupType lookupType) {
-        this.lookupType = lookupType;
+    public void setLookupTypeEntity(LookupTypeEntity lookupTypeEntity) {
+        this.lookupTypeEntity = lookupTypeEntity;
     }
 }
 

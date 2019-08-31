@@ -1,7 +1,7 @@
 package com.team.hairdresser.service.impl.lookuptype;
 
 import com.team.hairdresser.constant.ValidationMessages;
-import com.team.hairdresser.domain.lookuptype.LookupValue;
+import com.team.hairdresser.domain.lookuptype.LookupValueEntity;
 import com.team.hairdresser.dto.lookuptype.LookupValueDto;
 import com.team.hairdresser.service.api.lookuptype.LookupValueRules;
 import com.team.hairdresser.service.api.lookuptype.LookupValueService;
@@ -68,7 +68,7 @@ public class LookupValueRulesImpl implements LookupValueRules {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public LookupValue read(Integer genericTypeValueId) {
+    public LookupValueEntity read(Integer genericTypeValueId) {
         StringBuilder messages = new StringBuilder();
         boolean isValid = true;
         if (!ValidationHelper.notEmpty(genericTypeValueId)) {
@@ -100,19 +100,19 @@ public class LookupValueRulesImpl implements LookupValueRules {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<LookupValue> readAll() {
+    public List<LookupValueEntity> readAll() {
         return lookupValueService.readAll();
     }
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<LookupValue> readAllByLookupTypeId(Integer genericTypeId) {
+    public List<LookupValueEntity> readAllByLookupTypeId(Integer genericTypeId) {
         return lookupValueService.readAllByLookupTypeId(genericTypeId);
     }
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<LookupValue> readAllIcons() {
+    public List<LookupValueEntity> readAllIcons() {
         return lookupValueService.readAllIcon();
     }
 

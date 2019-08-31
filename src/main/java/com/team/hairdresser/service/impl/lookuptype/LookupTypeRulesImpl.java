@@ -2,7 +2,7 @@ package com.team.hairdresser.service.impl.lookuptype;
 
 
 import com.team.hairdresser.constant.ValidationMessages;
-import com.team.hairdresser.domain.lookuptype.LookupType;
+import com.team.hairdresser.domain.lookuptype.LookupTypeEntity;
 import com.team.hairdresser.dto.lookuptype.LookupTypeDto;
 import com.team.hairdresser.service.api.lookuptype.LookupTypeRules;
 import com.team.hairdresser.service.api.lookuptype.LookupTypeService;
@@ -62,7 +62,7 @@ public class LookupTypeRulesImpl implements LookupTypeRules {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public LookupType read(Integer genericTypeId) {
+    public LookupTypeEntity read(Integer genericTypeId) {
         StringBuilder messages = new StringBuilder();
         boolean isValid = true;
         if (!ValidationHelper.notEmpty(genericTypeId)) {
@@ -78,7 +78,7 @@ public class LookupTypeRulesImpl implements LookupTypeRules {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<LookupType> readAll() {
+    public List<LookupTypeEntity> readAll() {
         return lookupTypeService.readAll();
     }
 

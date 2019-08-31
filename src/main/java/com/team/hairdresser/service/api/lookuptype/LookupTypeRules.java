@@ -1,6 +1,6 @@
 package com.team.hairdresser.service.api.lookuptype;
 
-import com.team.hairdresser.domain.lookuptype.LookupType;
+import com.team.hairdresser.domain.lookuptype.LookupTypeEntity;
 import com.team.hairdresser.dto.lookuptype.LookupTypeDto;
 import com.team.hairdresser.utils.pageablesearch.model.PageableSearchFilterDto;
 import org.springframework.data.domain.Page;
@@ -13,9 +13,9 @@ public interface LookupTypeRules {
 
     void update(Integer lookupTypeId, LookupTypeDto lookupTypeDto);
 
-    LookupType read(Integer lookupTypeId);
+    LookupTypeEntity read(Integer lookupTypeId);
 
-    List<LookupType> readAll();
+    List<LookupTypeEntity> readAll();
 
     Page<LookupTypeDto> getAll(PageableSearchFilterDto pageRequest);
 }

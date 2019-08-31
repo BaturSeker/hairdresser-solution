@@ -5,8 +5,8 @@ import com.team.hairdresser.constant.AuthorityCodes;
 import com.team.hairdresser.constant.LookupTypeEnum;
 import com.team.hairdresser.dao.LookupTypeRepository;
 import com.team.hairdresser.dao.LookupValueRepository;
-import com.team.hairdresser.domain.lookuptype.LookupType;
-import com.team.hairdresser.domain.lookuptype.LookupValue;
+import com.team.hairdresser.domain.lookuptype.LookupTypeEntity;
+import com.team.hairdresser.domain.lookuptype.LookupValueEntity;
 import com.team.hairdresser.dto.lookuptype.LookupValueDto;
 import com.team.hairdresser.service.api.lookuptype.LookupValueService;
 import com.team.hairdresser.utils.util.ComboResponseBuilder;
@@ -27,59 +27,59 @@ public class LookupValueServiceImpl implements LookupValueService {
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_LOOKUP_VALUE_MANAGEMENT + "')")
     public List<LookupValueDto> getAllValuesByLookupTypeEnum(LookupTypeEnum typeEnum) {
-        List<LookupValue> values = lookupValueRepository.findAllByLookupTypeTypeEnum(typeEnum);
+        List<LookupValueEntity> values = lookupValueRepository.findAllByLookupTypeEntityTypeEnum(typeEnum);
         return LookupValueMapper.INSTANCE.entityListToDtoList(values);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_LOOKUP_VALUE_MANAGEMENT + "')")
     public Page<LookupValueDto> getValuesByLookupTypeEnum(LookupTypeEnum typeEnum, Pageable pageRequest) {
-        Page<LookupValue> values = lookupValueRepository.findAllByLookupTypeTypeEnum(typeEnum, pageRequest);
+        Page<LookupValueEntity> values = lookupValueRepository.findAllByLookupTypeEntityTypeEnum(typeEnum, pageRequest);
         return LookupValueMapper.INSTANCE.entityPageToDtoPage(values);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.CREATE_LOOKUP_VALUE + "')")
-    public LookupValue save(LookupValueDto lookupValueDto) {
-        LookupValue lookupValue = new LookupValue();
-        lookupValue.setValue(lookupValueDto.getValue());
-        LookupType lookupType = lookupTypeRepository.getOne(lookupValueDto.getLookupTypeId());
-        lookupValue.setLookupType(lookupType);
-        return lookupValueRepository.saveAndFlush(lookupValue);
+    public LookupValueEntity save(LookupValueDto lookupValueDto) {
+        LookupValueEntity lookupValueEntity = new LookupValueEntity();
+        lookupValueEntity.setValue(lookupValueDto.getValue());
+        LookupTypeEntity lookupTypeEntity = lookupTypeRepository.getOne(lookupValueDto.getLookupTypeId());
+        lookupValueEntity.setLookupTypeEntity(lookupTypeEntity);
+        return lookupValueRepository.saveAndFlush(lookupValueEntity);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_LOOKUP_VALUE + "')")
-    public LookupValue update(Integer lookupValueId, String value) {
-        LookupValue lookupValue = this.lookupValueRepository.getOne(lookupValueId);
-        lookupValue.setValue(value);
-        return this.lookupValueRepository.saveAndFlush(lookupValue);
+    public LookupValueEntity update(Integer lookupValueId, String value) {
+        LookupValueEntity lookupValueEntity = this.lookupValueRepository.getOne(lookupValueId);
+        lookupValueEntity.setValue(value);
+        return this.lookupValueRepository.saveAndFlush(lookupValueEntity);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_LOOKUP_VALUE_MANAGEMENT + "')")
-    public LookupValue read(Integer lookupValueId) {
+    public LookupValueEntity read(Integer lookupValueId) {
         return this.lookupValueRepository.getOne(lookupValueId);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_LOOKUP_VALUE_MANAGEMENT + "')")
-    public List<LookupValue> readAll() {
+    public List<LookupValueEntity> readAll() {
         return this.lookupValueRepository.findAll();
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_LOOKUP_VALUE_MANAGEMENT + "')")
-    public List<LookupValue> readAllByLookupTypeId(Integer lookupTypeId) {
-        LookupType lookupType = lookupTypeRepository.getOne(lookupTypeId);
-        return this.lookupValueRepository.findAllByLookupType(lookupType);
+    public List<LookupValueEntity> readAllByLookupTypeId(Integer lookupTypeId) {
+        LookupTypeEntity lookupTypeEntity = lookupTypeRepository.getOne(lookupTypeId);
+        return this.lookupValueRepository.findAllByLookupTypeEntity(lookupTypeEntity);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_LOOKUP_VALUE_MANAGEMENT + "')")
-    public List<LookupValue> readAllIcon() {
-        LookupType lookupType = lookupTypeRepository.findByName("Icon");
-        return lookupValueRepository.findAllByLookupType(lookupType);
+    public List<LookupValueEntity> readAllIcon() {
+        LookupTypeEntity lookupTypeEntity = lookupTypeRepository.findByName("Icon");
+        return lookupValueRepository.findAllByLookupTypeEntity(lookupTypeEntity);
     }
 
     @Override
@@ -92,10 +92,10 @@ public class LookupValueServiceImpl implements LookupValueService {
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_LOOKUP_VALUE + "')")
     public void changeActive(Integer lookupValueId) {
-        LookupValue lookupValue = this.lookupValueRepository.getOne(lookupValueId);
-        Boolean active = lookupValue.getActive();
-        lookupValue.setActive(!active);
-        this.lookupValueRepository.save(lookupValue);
+        LookupValueEntity lookupValueEntity = this.lookupValueRepository.getOne(lookupValueId);
+        Boolean active = lookupValueEntity.getActive();
+        lookupValueEntity.setActive(!active);
+        this.lookupValueRepository.save(lookupValueEntity);
     }
 
     @Autowired
