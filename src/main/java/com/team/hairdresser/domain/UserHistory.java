@@ -21,7 +21,7 @@ public class UserHistory extends BaseEntity<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RoleId", nullable = false)
-    private Roles role;
+    private RoleEntity role;
 
     public Users getUser() {
         return user;
@@ -39,11 +39,11 @@ public class UserHistory extends BaseEntity<Long> {
         this.authority = authority;
     }
 
-    public Roles getRole() {
+    public RoleEntity getRole() {
         return role;
     }
 
-    public void setRole(Roles role) {
+    public void setRole(RoleEntity role) {
         this.role = role;
     }
 }

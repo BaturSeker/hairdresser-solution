@@ -5,7 +5,7 @@ import com.team.hairdresser.constant.ExceptionMessages;
 import com.team.hairdresser.dao.RoleRepository;
 import com.team.hairdresser.dao.UserRoleRepository;
 import com.team.hairdresser.dao.UsersRepository;
-import com.team.hairdresser.domain.Roles;
+import com.team.hairdresser.domain.RoleEntity;
 import com.team.hairdresser.domain.UserRole;
 import com.team.hairdresser.domain.Users;
 import com.team.hairdresser.dto.role.RoleRequest;
@@ -34,7 +34,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void save(RoleRequest roleRequest) {
-        Roles role = new Roles();
+        RoleEntity role = new RoleEntity();
         role.setDeleted(false);
         role.setDescription(roleRequest.getDescription());
         role.setName(roleRequest.getName());
@@ -43,7 +43,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void update(Long roleId, RoleRequest roleRequest) throws NullObjectException {
-        Roles role = null;
+        RoleEntity role = null;
         try {
             role = roleRepository.getOne(roleId);
         } catch (Exception e) {
@@ -59,7 +59,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void delete(Long roleId) throws NullObjectException {
-        Roles role = roleRepository.getOne(roleId);
+        RoleEntity role = roleRepository.getOne(roleId);
         List<Users> users = userRules.findByRole(role);
         if (!users.isEmpty()) {
             throw new ValidationException("Bu role atanmış kullanıcılar olduğundan Bu Rol Silinemez.");
@@ -68,12 +68,12 @@ public class RoleServiceImpl implements RoleService {
         roleRepository.saveAndFlush(role);
     }
 
-    public Roles getRole(Long roleId) throws NullObjectException {
+    public RoleEntity getRole(Long roleId) throws NullObjectException {
         return roleRepository.getOne(roleId);
     }
 
     @Override
-    public List<Roles> getAllRoles() throws NullObjectException {
+    public List<RoleEntity> getAllRoles() throws NullObjectException {
         return roleRepository.findAllByIsDeleted(false);
     }
 

@@ -3,7 +3,7 @@ package com.team.hairdresser.service.impl.user;
 
 import com.team.hairdresser.dao.UserRoleRepository;
 import com.team.hairdresser.dao.UsersRepository;
-import com.team.hairdresser.domain.Roles;
+import com.team.hairdresser.domain.RoleEntity;
 import com.team.hairdresser.domain.UserRole;
 import com.team.hairdresser.domain.Users;
 import com.team.hairdresser.dto.password.ResetPasswordDto;
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Users> findByRole(Roles role) {
+    public List<Users> findByRole(RoleEntity role) {
         List<UserRole> userRoles = userRoleRepository.findAllByRole(role);
         Set<Long> userIds = userRoles.stream().map(t -> t.getUser().getId()).collect(Collectors.toSet());
         List<Users> userListByRole = new ArrayList<>();

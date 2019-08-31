@@ -2,7 +2,7 @@ package com.team.hairdresser.controller;
 
 
 import com.team.hairdresser.constant.SuccessMessages;
-import com.team.hairdresser.domain.Roles;
+import com.team.hairdresser.domain.RoleEntity;
 import com.team.hairdresser.dto.SuccessResponseDto;
 import com.team.hairdresser.dto.role.RoleDto;
 import com.team.hairdresser.dto.role.RoleRequest;
@@ -28,7 +28,7 @@ public class RoleController {
     @GetMapping(value = "{roleId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getRole(@PathVariable Long roleId) {
-        Roles role = roleRules.read(roleId);
+        RoleEntity role = roleRules.read(roleId);
         RoleDto roleDto = RoleMapper.INSTANCE.entityToDto(role);
         roleDto.setRoleAuthorities(authorityRules.findAuthoritiesByRoleId(roleId));
         return new ResponseEntity<>(roleDto, HttpStatus.OK);

@@ -46,7 +46,7 @@ public class AuthorityListRulesImpl implements AuthorityListRules {
         List<UserRole> userRoleList = getAuthorizeList(user.getId());
 
         for (UserRole userRole : userRoleList) {
-            Roles role = userRole.getRole();
+            RoleEntity role = userRole.getRole();
             List<RoleAuthorityEntity> roleAuthorities = role.getRoleAuthorities();
             if (roleAuthorities != null) {
                 for (RoleAuthorityEntity ra : roleAuthorities) {

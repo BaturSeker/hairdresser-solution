@@ -1,6 +1,6 @@
 package com.team.hairdresser.service.api.role;
 
-import com.team.hairdresser.domain.Roles;
+import com.team.hairdresser.domain.RoleEntity;
 import com.team.hairdresser.dto.role.RoleRequest;
 import com.team.hairdresser.dto.user.UserRoleRequest;
 
@@ -13,9 +13,9 @@ public interface RoleRules {
 
     void delete(Long roleId);
 
-    Roles read(Long roleId);
+    RoleEntity read(Long roleId);
 
-    List<Roles> readAll();
+    List<RoleEntity> readAll();
 
     void assignUserRoles(UserRoleRequest userRoleRequest);
 

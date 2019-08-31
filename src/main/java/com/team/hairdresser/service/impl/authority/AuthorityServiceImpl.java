@@ -96,7 +96,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_ROLE_AUTHORITIES + "')")
     public void assignRoleAuthorities(RoleAuthorityRequestDto roleAuthorityRequestDto) {
-        Roles role = roleRepository.getOne(roleAuthorityRequestDto.getRoleId());
+        RoleEntity role = roleRepository.getOne(roleAuthorityRequestDto.getRoleId());
         roleAuthorityRepository.deleteAllByRole(role);
         for (Long authorityId : roleAuthorityRequestDto.getAuthorityIds()) {
             RoleAuthorityEntity roleAuthorityEntity = new RoleAuthorityEntity();
@@ -128,7 +128,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     public List<AuthorityEntity> getAnonymousUserAuthorities() {
-        Roles role = roleRepository.findByName("AnonymousUser");
+        RoleEntity role = roleRepository.findByName("AnonymousUser");
         Set<Long> authorityIds = new HashSet<>();
         List<RoleAuthorityEntity> roleAuthorities = roleAuthorityRepository.findAllByRole(roleRepository.getOne(role.getId()));
         for (RoleAuthorityEntity roleAuth : roleAuthorities) {

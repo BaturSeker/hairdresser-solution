@@ -1,6 +1,6 @@
 package com.team.hairdresser.service.api.user;
 
-import com.team.hairdresser.domain.Roles;
+import com.team.hairdresser.domain.RoleEntity;
 import com.team.hairdresser.domain.Users;
 import com.team.hairdresser.dto.password.ResetPasswordDto;
 import com.team.hairdresser.dto.user.UserInfoResponseDto;
@@ -24,7 +24,7 @@ public interface UserService {
 
     Page<UserInfoResponseDto> getUsersFiltered(PageableSearchFilterDto filterDto);
 
-    List<Users> findByRole(Roles role);
+    List<Users> findByRole(RoleEntity role);
 
     //TODO:
 //    Integer saveUserImage(UserImageDto userImageDto);

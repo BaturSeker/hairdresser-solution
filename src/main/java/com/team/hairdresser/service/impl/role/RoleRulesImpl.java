@@ -2,7 +2,7 @@ package com.team.hairdresser.service.impl.role;
 
 import com.team.hairdresser.constant.AuthorityCodes;
 import com.team.hairdresser.constant.ValidationMessages;
-import com.team.hairdresser.domain.Roles;
+import com.team.hairdresser.domain.RoleEntity;
 import com.team.hairdresser.dto.role.RoleRequest;
 import com.team.hairdresser.dto.user.UserRoleRequest;
 import com.team.hairdresser.service.api.role.RoleRules;
@@ -95,7 +95,7 @@ public class RoleRulesImpl implements RoleRules {
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_ROLE_MANAGEMENT + "')")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Roles read(Long roleId) {
+    public RoleEntity read(Long roleId) {
         StringBuilder message = new StringBuilder();
         boolean isValid = true;
         if (!ValidationHelper.notEmpty(roleId)) {
@@ -113,7 +113,7 @@ public class RoleRulesImpl implements RoleRules {
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_ROLE_MANAGEMENT + "')")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Roles> readAll() throws NullObjectException {
+    public List<RoleEntity> readAll() throws NullObjectException {
         return roleService.getAllRoles();
     }
 

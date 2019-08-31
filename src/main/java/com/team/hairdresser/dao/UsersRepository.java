@@ -1,7 +1,7 @@
 package com.team.hairdresser.dao;
 
 
-import com.team.hairdresser.domain.Roles;
+import com.team.hairdresser.domain.RoleEntity;
 import com.team.hairdresser.domain.Users;
 import com.team.hairdresser.utils.abstracts.BaseRepository;
 import org.springframework.data.domain.Page;
@@ -21,7 +21,7 @@ public interface UsersRepository extends BaseRepository<Users, Long> {
 
     Page<Users> findUsersBy(Pageable pageRequest);
 
-    List<Users> findAllByUserRolesContaining(Roles role);
+    List<Users> findAllByUserRolesContaining(RoleEntity role);
 
     Users findByEmail(String email);
 

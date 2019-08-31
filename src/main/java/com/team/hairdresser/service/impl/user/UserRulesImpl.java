@@ -3,7 +3,7 @@ package com.team.hairdresser.service.impl.user;
 
 import com.team.hairdresser.constant.AuthorityCodes;
 import com.team.hairdresser.constant.ValidationMessages;
-import com.team.hairdresser.domain.Roles;
+import com.team.hairdresser.domain.RoleEntity;
 import com.team.hairdresser.domain.Users;
 import com.team.hairdresser.dto.password.ResetPasswordDto;
 import com.team.hairdresser.dto.user.UserInfoResponseDto;
@@ -113,7 +113,7 @@ public class UserRulesImpl implements UserRules {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
-    public List<Users> findByRole(Roles role) {
+    public List<Users> findByRole(RoleEntity role) {
         return this.userService.findByRole(role);
     }
 

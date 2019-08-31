@@ -13,17 +13,17 @@ public class UserRole extends BaseEntity<Long> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "RoleId", nullable = false)
-    private Roles role;
+    private RoleEntity role;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "UserId", nullable = false)
     private Users user;
 
-    public Roles getRole() {
+    public RoleEntity getRole() {
         return role;
     }
 
-    public void setRole(Roles role) {
+    public void setRole(RoleEntity role) {
         this.role = role;
     }
 

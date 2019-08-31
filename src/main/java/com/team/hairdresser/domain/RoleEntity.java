@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Roles extends BaseEntity<Long> {
+public class RoleEntity extends BaseEntity<Long> {
 
     @Column(name = "Name")
     private String name;
