@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Users extends BaseEntity<Long> {
+public class UserEntity extends BaseEntity<Long> {
 
     @Size(max = 50)
     @Column(name = "Firstname", length = 50)

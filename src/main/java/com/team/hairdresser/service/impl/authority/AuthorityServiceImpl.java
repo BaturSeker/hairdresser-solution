@@ -108,8 +108,8 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_AUTHORITY_MANAGEMENT + "')")
-    public List<AuthorityEntity> getUserAuthorities(Users users) {
-        Collection<UserRoleEntity> userRolesByUsersIdEntity = users.getUserRoleEntities();
+    public List<AuthorityEntity> getUserAuthorities(UserEntity userEntity) {
+        Collection<UserRoleEntity> userRolesByUsersIdEntity = userEntity.getUserRoleEntities();
         List<Long> roleIds = new ArrayList<>();
         for (UserRoleEntity userRoleEntity : userRolesByUsersIdEntity) {
             roleIds.add(userRoleEntity.getRole().getId());

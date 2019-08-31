@@ -3,7 +3,7 @@ package com.team.hairdresser.controller;
 
 import com.team.hairdresser.constant.SuccessMessages;
 import com.team.hairdresser.domain.UserRoleEntity;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.SuccessResponseDto;
 import com.team.hairdresser.dto.password.ResetPasswordDto;
 import com.team.hairdresser.dto.user.UserInfoResponseDto;
@@ -41,7 +41,7 @@ public class UserController {
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getUser(@PathVariable Long userId) {
         try {
-            Users user = userRules.getUser(userId);
+            UserEntity user = userRules.getUser(userId);
             UserResponseDto userResponseDto = new UserResponseDto();
             userResponseDto.setUsername(user.getUsername());
             userResponseDto.setName(user.getFirstname());
@@ -62,7 +62,7 @@ public class UserController {
     @GetMapping("index")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAllUsers() {
-        List<Users> userList = userRules.read();
+        List<UserEntity> userList = userRules.read();
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
@@ -120,7 +120,7 @@ public class UserController {
     @GetMapping("getAllUser/{locationId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAllUser(@PathVariable Integer locationId) {
-        List<Users> userList = userRules.getAllUser(locationId);
+        List<UserEntity> userList = userRules.getAllUser(locationId);
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 

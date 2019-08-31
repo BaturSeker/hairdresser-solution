@@ -2,7 +2,7 @@ package com.team.hairdresser.service.impl.login;
 
 
 import com.team.hairdresser.constant.ValidationMessages;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.login.LoginRequestDto;
 import com.team.hairdresser.service.api.login.LoginRules;
 import com.team.hairdresser.service.api.login.LoginService;
@@ -21,7 +21,7 @@ public class LoginRulesImpl implements LoginRules {
     private PasswordRules passwordRules;
 
     @Override
-    public Users login(LoginRequestDto loginRequestDto) throws Exception {
+    public UserEntity login(LoginRequestDto loginRequestDto) throws Exception {
 
         StringBuilder message = new StringBuilder();
         boolean isValid = true;
@@ -43,7 +43,7 @@ public class LoginRulesImpl implements LoginRules {
 
 
     @Override
-    public Users loginLDAP(LoginRequestDto loginRequestDto) throws Exception {
+    public UserEntity loginLDAP(LoginRequestDto loginRequestDto) throws Exception {
 
         StringBuilder message = new StringBuilder();
         boolean isValid = true;

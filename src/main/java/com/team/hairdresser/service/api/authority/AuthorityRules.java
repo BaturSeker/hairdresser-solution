@@ -1,7 +1,7 @@
 package com.team.hairdresser.service.api.authority;
 
 import com.team.hairdresser.domain.AuthorityEntity;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.authority.AuthorityRequestDto;
 import com.team.hairdresser.dto.authority.AuthorityResponse;
 import com.team.hairdresser.dto.authority.RoleAuthorityRequestDto;
@@ -19,7 +19,7 @@ public interface AuthorityRules {
 
     void assignRoleAuthorities(RoleAuthorityRequestDto roleAuthorityRequestDto);
 
-    List<AuthorityEntity> getUserAuthorities(Users users) throws Exception;
+    List<AuthorityEntity> getUserAuthorities(UserEntity userEntity) throws Exception;
 
     List<AuthorityEntity> getAnonymousUserAuthorities();
 

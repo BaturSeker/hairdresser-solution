@@ -17,7 +17,7 @@ public class UserRoleEntity extends BaseEntity<Long> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "UserId", nullable = false)
-    private Users user;
+    private UserEntity user;
 
     public RoleEntity getRole() {
         return role;
@@ -27,11 +27,11 @@ public class UserRoleEntity extends BaseEntity<Long> {
         this.role = role;
     }
 
-    public Users getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(Users user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
 }

@@ -3,7 +3,7 @@ package com.team.hairdresser.service.impl.authority;
 
 import com.team.hairdresser.constant.ValidationMessages;
 import com.team.hairdresser.domain.AuthorityEntity;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.authority.AuthorityRequestDto;
 import com.team.hairdresser.dto.authority.AuthorityResponse;
 import com.team.hairdresser.dto.authority.RoleAuthorityRequestDto;
@@ -142,8 +142,8 @@ public class AuthorityRulesImpl implements AuthorityRules {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<AuthorityEntity> getUserAuthorities(Users users) {
-        return this.authorityService.getUserAuthorities(users);
+    public List<AuthorityEntity> getUserAuthorities(UserEntity userEntity) {
+        return this.authorityService.getUserAuthorities(userEntity);
     }
 
 

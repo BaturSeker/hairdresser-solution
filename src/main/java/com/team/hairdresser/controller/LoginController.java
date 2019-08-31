@@ -4,7 +4,7 @@ package com.team.hairdresser.controller;
 import com.team.hairdresser.config.ActiveDirectoryHelper;
 import com.team.hairdresser.config.security.JwtUtil;
 import com.team.hairdresser.domain.AuthorityEntity;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.authority.AuthorityResponse;
 import com.team.hairdresser.dto.login.LoginRequestDto;
 import com.team.hairdresser.dto.login.LoginResponseDto;
@@ -42,7 +42,7 @@ public class LoginController {
 
         if (activeDirectoryHelper.getLdapConfig().getEnabled()) {
             if (activeDirectoryHelper.authenticate(loginRequestDto.getUsername(), loginRequestDto.getPassword())) {
-                Users user = loginRules.loginLDAP(loginRequestDto);
+                UserEntity user = loginRules.loginLDAP(loginRequestDto);
                 authorityListRules.authorize(user);
                 List<AuthorityEntity> authorities = this.authorityRules.getUserAuthorities(user);
                 LoginResponseDto loginResponseDto = new LoginResponseDto();
@@ -60,7 +60,7 @@ public class LoginController {
             }
 
         } else {
-            Users user = loginRules.login(loginRequestDto);
+            UserEntity user = loginRules.login(loginRequestDto);
             authorityListRules.authorize(user);
             List<AuthorityEntity> authorities = this.authorityRules.getUserAuthorities(user);
             LoginResponseDto loginResponseDto = new LoginResponseDto();
@@ -98,7 +98,7 @@ public class LoginController {
         return new ResponseEntity<>(true, responseCode);
     }
 
-    private LoginUserResponseDto getUserResponse(Users user) {
+    private LoginUserResponseDto getUserResponse(UserEntity user) {
         LoginUserResponseDto loginUserResponseDto = new LoginUserResponseDto();
         loginUserResponseDto.setUserId(user.getId());
         loginUserResponseDto.setSurname(user.getSurname());

@@ -1,6 +1,6 @@
 package com.team.hairdresser.service.api.password;
 
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.password.SetNewPasswordRequestDto;
 import com.team.hairdresser.dto.user.UserRequestDto;
 
@@ -14,9 +14,9 @@ public interface PasswordRules {
 
     boolean isUsernamePasswordValid(String userName, String password);
 
-    void setIsTemproraryPassword(Users users) throws NoSuchAlgorithmException;
+    void setIsTemproraryPassword(UserEntity userEntity) throws NoSuchAlgorithmException;
 
-    void setIsTemproraryPassword(List<Users> users) throws NoSuchAlgorithmException;
+    void setIsTemproraryPassword(List<UserEntity> users) throws NoSuchAlgorithmException;
 
     void setNewPassword(SetNewPasswordRequestDto setNewPasswordRequestDto) throws NoSuchAlgorithmException;
 

@@ -40,7 +40,7 @@ public class AuthorityListRulesImpl implements AuthorityListRules {
     }
 
     @Override
-    public void authorize(Users user) {
+    public void authorize(UserEntity user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         List<UserRoleEntity> userRoleEntityList = getAuthorizeList(user.getId());

@@ -7,7 +7,7 @@ import com.team.hairdresser.dao.UserRoleRepository;
 import com.team.hairdresser.dao.UsersRepository;
 import com.team.hairdresser.domain.RoleEntity;
 import com.team.hairdresser.domain.UserRoleEntity;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.role.RoleRequest;
 import com.team.hairdresser.dto.user.UserRoleRequest;
 import com.team.hairdresser.service.api.role.RoleService;
@@ -60,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void delete(Long roleId) throws NullObjectException {
         RoleEntity role = roleRepository.getOne(roleId);
-        List<Users> users = userRules.findByRole(role);
+        List<UserEntity> users = userRules.findByRole(role);
         if (!users.isEmpty()) {
             throw new ValidationException("Bu role atanmış kullanıcılar olduğundan Bu Rol Silinemez.");
         }

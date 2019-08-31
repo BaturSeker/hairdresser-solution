@@ -16,7 +16,7 @@ public class UserLogEntity extends BaseEntity<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UserId", nullable = false)
-    private Users user;
+    private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "AuthorityId", nullable = false)
@@ -38,11 +38,11 @@ public class UserLogEntity extends BaseEntity<Long> {
         this.logDetail = logDetail;
     }
 
-    public Users getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(Users user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
 

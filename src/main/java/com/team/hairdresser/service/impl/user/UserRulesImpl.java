@@ -4,7 +4,7 @@ package com.team.hairdresser.service.impl.user;
 import com.team.hairdresser.constant.AuthorityCodes;
 import com.team.hairdresser.constant.ValidationMessages;
 import com.team.hairdresser.domain.RoleEntity;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.password.ResetPasswordDto;
 import com.team.hairdresser.dto.user.UserInfoResponseDto;
 import com.team.hairdresser.service.api.user.UserRules;
@@ -32,7 +32,7 @@ public class UserRulesImpl implements UserRules {
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
-    public void saveAll(List<Users> userList) {
+    public void saveAll(List<UserEntity> userList) {
         boolean isValid = true;
         StringBuilder messages = new StringBuilder();
         if (!ValidationHelper.isValid(userList)) {
@@ -44,14 +44,14 @@ public class UserRulesImpl implements UserRules {
             throw new ValidationException(messages.toString());
         }
 
-        for (Users user : userList) {
+        for (UserEntity user : userList) {
             this.save(user);
         }
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
-    public void save(Users user) {
+    public void save(UserEntity user) {
         boolean isValid = true;
         StringBuilder messages = new StringBuilder();
         if (Objects.equals(user, null)) {
@@ -68,7 +68,7 @@ public class UserRulesImpl implements UserRules {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
-    public Users getUser(Long userId) {
+    public UserEntity getUser(Long userId) {
         boolean isValid = true;
         StringBuilder message = new StringBuilder();
         if (!ValidationHelper.isValid(userId)) {
@@ -92,7 +92,7 @@ public class UserRulesImpl implements UserRules {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
-    public List<Users> read() {
+    public List<UserEntity> read() {
         return userService.getAllUsers();
     }
 
@@ -113,7 +113,7 @@ public class UserRulesImpl implements UserRules {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
-    public List<Users> findByRole(RoleEntity role) {
+    public List<UserEntity> findByRole(RoleEntity role) {
         return this.userService.findByRole(role);
     }
 
@@ -126,7 +126,7 @@ public class UserRulesImpl implements UserRules {
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Users> getAllUser(Integer locationId) {
+    public List<UserEntity> getAllUser(Integer locationId) {
         return this.userService.getAllUser(locationId);
     }
 

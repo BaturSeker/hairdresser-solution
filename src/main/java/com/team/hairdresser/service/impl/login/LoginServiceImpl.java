@@ -4,7 +4,7 @@ package com.team.hairdresser.service.impl.login;
 import com.team.hairdresser.constant.Constants;
 import com.team.hairdresser.constant.ExceptionMessages;
 import com.team.hairdresser.dao.UsersRepository;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.login.LoginRequestDto;
 import com.team.hairdresser.service.api.login.LoginService;
 import com.team.hairdresser.utils.util.CalendarHelper;
@@ -26,8 +26,8 @@ public class LoginServiceImpl implements LoginService {
     private HttpServletRequest httpServletRequest;
 
     @Override
-    public Users loggedIn(LoginRequestDto loginRequestDto) throws Exception {
-        Users user = usersRepository.findUsersByUsername(loginRequestDto.getUsername());
+    public UserEntity loggedIn(LoginRequestDto loginRequestDto) throws Exception {
+        UserEntity user = usersRepository.findUsersByUsername(loginRequestDto.getUsername());
         if (user == null) {
             throw new ValidationException(ExceptionMessages.NO_SUCH_USER);
         }
@@ -51,8 +51,8 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public Users loggedInLDAP(LoginRequestDto loginRequestDto) throws Exception {
-        Users user = usersRepository.findUsersByUsername(loginRequestDto.getUsername());
+    public UserEntity loggedInLDAP(LoginRequestDto loginRequestDto) throws Exception {
+        UserEntity user = usersRepository.findUsersByUsername(loginRequestDto.getUsername());
         if (user == null) {
             throw new ValidationException(ExceptionMessages.NO_SUCH_USER);
         }
@@ -74,7 +74,7 @@ public class LoginServiceImpl implements LoginService {
      * @param user
      * @throws Exception
      */
-    private void isInvalidLoginCountReached(Users user) throws Exception {
+    private void isInvalidLoginCountReached(UserEntity user) throws Exception {
         if (user.getLoginLockDate() != null) {
             if ((System.currentTimeMillis() - user.getLoginLockDate().getEpochSecond() <= Constants.TIMEOUT_DURATION_MS)) {
                 long remaining = (user.getLoginLockDate().getEpochSecond() + Constants.TIMEOUT_DURATION_MS - System.currentTimeMillis()) / 1000;

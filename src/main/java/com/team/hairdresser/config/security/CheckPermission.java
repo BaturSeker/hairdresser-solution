@@ -2,7 +2,7 @@ package com.team.hairdresser.config.security;
 
 
 import com.team.hairdresser.domain.AuthorityEntity;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.service.api.authority.AuthorityRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class CheckPermission {
 
     public boolean hasPermission(Authentication authentication, String... authorityCodes) throws Exception {
         if (authentication != null) {
-            if (authentication.getPrincipal() instanceof Users) {
+            if (authentication.getPrincipal() instanceof UserEntity) {
                 if (authorityCodes.length == 0) {
                     return true;
                 }
@@ -40,7 +40,7 @@ public class CheckPermission {
                 for (String authorityCode : authorityCodes) {
                     newAuthorityList.addAll(addPermission(authorityCode));
                 }
-                Users user = (Users) authentication.getPrincipal();
+                UserEntity user = (UserEntity) authentication.getPrincipal();
                 List<AuthorityEntity> authorities = authorityRules.getUserAuthorities(user);
                 for (String childAuthority : newAuthorityList) {
                     boolean state = checkPermission(authorities, childAuthority);

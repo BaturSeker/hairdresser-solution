@@ -2,7 +2,7 @@ package com.team.hairdresser.service.impl.password;
 
 
 import com.team.hairdresser.constant.ExceptionMessages;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.password.SetNewPasswordRequestDto;
 import com.team.hairdresser.dto.user.UserRequestDto;
 import com.team.hairdresser.service.api.password.PasswordRules;
@@ -83,7 +83,7 @@ public class PasswordRulesImpl implements PasswordRules, ResourceLoaderAware {
     }
 
     @Override
-    public void setIsTemproraryPassword(Users user) throws NoSuchAlgorithmException {
+    public void setIsTemproraryPassword(UserEntity user) throws NoSuchAlgorithmException {
         PasswordGenerator passwordGenerator = new PasswordGenerator();
         String password = passwordGenerator.generate(10);
 
@@ -104,9 +104,9 @@ public class PasswordRulesImpl implements PasswordRules, ResourceLoaderAware {
     }
 
     @Override
-    public void setIsTemproraryPassword(List<Users> usersList) throws NoSuchAlgorithmException {
-        for (Users users : usersList) {
-            this.setIsTemproraryPassword(users);
+    public void setIsTemproraryPassword(List<UserEntity> userEntityList) throws NoSuchAlgorithmException {
+        for (UserEntity userEntity : userEntityList) {
+            this.setIsTemproraryPassword(userEntity);
         }
     }
 
@@ -115,7 +115,7 @@ public class PasswordRulesImpl implements PasswordRules, ResourceLoaderAware {
         StringBuilder messages = new StringBuilder();
         boolean isValidPass = true;
         String hashedOldPass, hashedNewPass;
-        Users user = userService.getUser(setNewPasswordRequest.getUserId());
+        UserEntity user = userService.getUser(setNewPasswordRequest.getUserId());
         hashedOldPass = HashUtils.sha256(setNewPasswordRequest.getOldPassword());
         hashedNewPass = HashUtils.sha256(setNewPasswordRequest.getNewPassword());
         if (!setNewPasswordRequest.getNewPassword().equals(setNewPasswordRequest.getNewPasswordRe())) {
@@ -163,7 +163,7 @@ public class PasswordRulesImpl implements PasswordRules, ResourceLoaderAware {
         if (!isValidPass) {
             throw new ValidationException(messages.toString());
         }
-        Users user = this.userRules.getUser(userId);
+        UserEntity user = this.userRules.getUser(userId);
         setIsTemproraryPassword(user);
     }
 

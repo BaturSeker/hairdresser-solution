@@ -2,7 +2,7 @@ package com.team.hairdresser.config.security;
 
 
 import com.team.hairdresser.constant.Constants;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -68,13 +68,13 @@ public class JwtUtil {
     }
 
 
-    public String generateTokenWithUUID(Users user, String uuid) {
+    public String generateTokenWithUUID(UserEntity user, String uuid) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("jti", uuid);
         return doGenerateToken(claims, user.getUsername());
     }
 
-    public String generateTokenWithId(Users user) {
+    public String generateTokenWithId(UserEntity user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(Constants.USER_ID, user.getId());
         return doGenerateToken(claims, user.getUsername());

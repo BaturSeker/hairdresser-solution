@@ -2,7 +2,7 @@ package com.team.hairdresser.config.security;
 
 
 import com.team.hairdresser.dao.UsersRepository;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.service.api.authority.AuthorityListRules;
 import com.team.hairdresser.service.impl.token.UserTokenHolderServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -57,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             log.debug("security context was null, so authorizating user");
 
-            Users user = this.usersRepository.findUsersByUsername(username);
+            UserEntity user = this.usersRepository.findUsersByUsername(username);
             if (jwtUtil.validateToken(authToken, user.getUsername())) {
 
                 authorityListRules.authorize(user);

@@ -5,7 +5,7 @@ import com.team.hairdresser.dao.UserRoleRepository;
 import com.team.hairdresser.dao.UsersRepository;
 import com.team.hairdresser.domain.RoleEntity;
 import com.team.hairdresser.domain.UserRoleEntity;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.password.ResetPasswordDto;
 import com.team.hairdresser.dto.user.UserInfoResponseDto;
 import com.team.hairdresser.service.api.user.UserService;
@@ -37,17 +37,17 @@ public class UserServiceImpl implements UserService {
 //    private final MailService mailService;
 
     @Override
-    public void save(Users user) {
+    public void save(UserEntity user) {
         usersRepository.save(user);
     }
 
     @Override
-    public Users getUser(Long userId) {
+    public UserEntity getUser(Long userId) {
         return usersRepository.getOne(userId);
     }
 
     @Override
-    public List<Users> getAllUsers() {
+    public List<UserEntity> getAllUsers() {
         return IteratorUtils.toList(usersRepository.findAll().iterator());
     }
 
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserInfoResponseDto> getUserInfoPage(PageRequest pageRequest) {
-        Page<Users> usersPageResult = usersRepository.findUsersBy(pageRequest);
+        Page<UserEntity> usersPageResult = usersRepository.findUsersBy(pageRequest);
         List<UserInfoResponseDto> userInfoResponseDtoList = new ArrayList<>();
         //TODO: deleted userlar sayilmamalidir
         buildResultList(usersPageResult, userInfoResponseDtoList);
@@ -74,8 +74,8 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    private void buildResultList(Page<Users> usersPageResult, List<UserInfoResponseDto> userInfoResponseDtoList) {
-        for (Users u : usersPageResult) {
+    private void buildResultList(Page<UserEntity> usersPageResult, List<UserInfoResponseDto> userInfoResponseDtoList) {
+        for (UserEntity u : usersPageResult) {
             UserInfoResponseDto userInfoResponseDto = new UserInfoResponseDto();
             populateFromUser(u, userInfoResponseDto);
 
@@ -91,12 +91,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Users> findByRole(RoleEntity role) {
+    public List<UserEntity> findByRole(RoleEntity role) {
         List<UserRoleEntity> userRoleEntities = userRoleRepository.findAllByRole(role);
         Set<Long> userIds = userRoleEntities.stream().map(t -> t.getUser().getId()).collect(Collectors.toSet());
-        List<Users> userListByRole = new ArrayList<>();
+        List<UserEntity> userListByRole = new ArrayList<>();
         for (Long userId : userIds) {
-            Users user = usersRepository.getOne(userId);
+            UserEntity user = usersRepository.getOne(userId);
             userListByRole.add(user);
         }
 
@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String resetPassword(ResetPasswordDto resetPasswordDto) throws NoSuchAlgorithmException {
         PasswordGenerator passwordGenerator = new PasswordGenerator();
-        Users user = this.usersRepository.findByEmail(resetPasswordDto.getEmail());
+        UserEntity user = this.usersRepository.findByEmail(resetPasswordDto.getEmail());
         String tempPass = passwordGenerator.generate(10);
         if (Objects.nonNull(user.getId())) {
             user.setPassword(HashUtils.sha256(tempPass));
@@ -132,12 +132,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Users> getAllUser(Integer locationId) {
+    public List<UserEntity> getAllUser(Integer locationId) {
         return null;
     }
 
     @Override
-    public String getUserInfo(Users user) {
+    public String getUserInfo(UserEntity user) {
         StringBuilder userName = new StringBuilder();
         userName.append(" ");
         userName.append(user.getFirstname());
@@ -147,8 +147,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Users getCurrentUser() {
-        return (Users) (SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    public UserEntity getCurrentUser() {
+        return (UserEntity) (SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }
 
     private void sendMail(String subject, String content, String email) {
@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService {
 //        mailService.sendEmail(mail);
     }
 
-    private void populateFromUser(Users u, UserInfoResponseDto userInfoResponseDto) {
+    private void populateFromUser(UserEntity u, UserInfoResponseDto userInfoResponseDto) {
         userInfoResponseDto.setName(u.getFirstname());
         userInfoResponseDto.setSurname(u.getSurname());
         userInfoResponseDto.setEmail(u.getEmail());

@@ -1,7 +1,7 @@
 package com.team.hairdresser.service.api.user;
 
 import com.team.hairdresser.domain.RoleEntity;
-import com.team.hairdresser.domain.Users;
+import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.password.ResetPasswordDto;
 import com.team.hairdresser.dto.user.UserInfoResponseDto;
 import com.team.hairdresser.utils.pageablesearch.model.PageableSearchFilterDto;
@@ -13,13 +13,13 @@ import java.util.List;
 
 public interface UserRules {
 
-    void saveAll(List<Users> userList);
+    void saveAll(List<UserEntity> userList);
 
-    void save(Users user);
+    void save(UserEntity user);
 
-    List<Users> read();
+    List<UserEntity> read();
 
-    Users getUser(Long userId);
+    UserEntity getUser(Long userId);
 
     Page<UserInfoResponseDto> getUsersFiltered(PageableSearchFilterDto filterDto);
 
@@ -29,10 +29,10 @@ public interface UserRules {
 
 //    Page<UserInfoResponseDto> getUsersFiltered(PageableSearchFilterDto filterDto);
 
-    List<Users> findByRole(RoleEntity role);
+    List<UserEntity> findByRole(RoleEntity role);
 
     String resetPassword(ResetPasswordDto resetPasswordDto) throws NoSuchAlgorithmException;
 
-    List<Users> getAllUser(Integer locationId);
+    List<UserEntity> getAllUser(Integer locationId);
 
 }
