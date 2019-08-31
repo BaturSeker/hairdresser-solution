@@ -2,7 +2,7 @@ package com.team.hairdresser.controller;
 
 
 import com.team.hairdresser.constant.SuccessMessages;
-import com.team.hairdresser.domain.UserRole;
+import com.team.hairdresser.domain.UserRoleEntity;
 import com.team.hairdresser.domain.Users;
 import com.team.hairdresser.dto.SuccessResponseDto;
 import com.team.hairdresser.dto.password.ResetPasswordDto;
@@ -69,8 +69,8 @@ public class UserController {
     @PostMapping("getAuthorizeList{userId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAuthorizeList(@Valid @RequestBody Long userId) {
-        List<UserRole> userRoleList = authorityListRules.getAuthorizeList(userId);
-        return new ResponseEntity<>(userRoleList, HttpStatus.OK);
+        List<UserRoleEntity> userRoleEntityList = authorityListRules.getAuthorizeList(userId);
+        return new ResponseEntity<>(userRoleEntityList, HttpStatus.OK);
     }
 
     @GetMapping("getComboUsers")

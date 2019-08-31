@@ -21,7 +21,7 @@ public interface UsersRepository extends BaseRepository<Users, Long> {
 
     Page<Users> findUsersBy(Pageable pageRequest);
 
-    List<Users> findAllByUserRolesContaining(RoleEntity role);
+    List<Users> findAllByUserRoleEntitiesContaining(RoleEntity role);
 
     Users findByEmail(String email);
 

@@ -6,7 +6,7 @@ import com.team.hairdresser.dao.RoleRepository;
 import com.team.hairdresser.dao.UserRoleRepository;
 import com.team.hairdresser.dao.UsersRepository;
 import com.team.hairdresser.domain.RoleEntity;
-import com.team.hairdresser.domain.UserRole;
+import com.team.hairdresser.domain.UserRoleEntity;
 import com.team.hairdresser.domain.Users;
 import com.team.hairdresser.dto.role.RoleRequest;
 import com.team.hairdresser.dto.user.UserRoleRequest;
@@ -80,10 +80,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void assignUserRoles(UserRoleRequest userRoleRequest) {
         for (Long roleId : userRoleRequest.getRoleIds()) {
-            UserRole userRole = new UserRole();
-            userRole.setRole(roleRepository.getOne(roleId));
-            userRole.setUser(usersRepository.getOne(userRoleRequest.getUserId()));
-            userRoleRepository.saveAndFlush(userRole);
+            UserRoleEntity userRoleEntity = new UserRoleEntity();
+            userRoleEntity.setRole(roleRepository.getOne(roleId));
+            userRoleEntity.setUser(usersRepository.getOne(userRoleRequest.getUserId()));
+            userRoleRepository.saveAndFlush(userRoleEntity);
         }
     }
 

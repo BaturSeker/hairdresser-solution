@@ -3,7 +3,7 @@ package com.team.hairdresser.service.impl.authority;
 
 import com.team.hairdresser.dao.UserRoleRepository;
 import com.team.hairdresser.dao.UsersRepository;
-import com.team.hairdresser.domain.UserRole;
+import com.team.hairdresser.domain.UserRoleEntity;
 import com.team.hairdresser.service.api.authority.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +22,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<UserRole> getAuthorizeList(Long userId) {
-        List<UserRole> authorizeList = userRoleRepository.findByUser(usersRepository.getOne(userId));
+    public List<UserRoleEntity> getAuthorizeList(Long userId) {
+        List<UserRoleEntity> authorizeList = userRoleRepository.findByUser(usersRepository.getOne(userId));
         return authorizeList;
     }
 

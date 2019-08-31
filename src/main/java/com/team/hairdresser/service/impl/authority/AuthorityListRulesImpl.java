@@ -28,12 +28,12 @@ public class AuthorityListRulesImpl implements AuthorityListRules {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<UserRole> getAuthorizeList(Long userId) {
+    public List<UserRoleEntity> getAuthorizeList(Long userId) {
 
         if (userId != null) {
-            List<UserRole> userRoleElem = authorizationService.getAuthorizeList(userId);
-            if (userRoleElem != null) {
-                return userRoleElem;
+            List<UserRoleEntity> userRoleEntityElem = authorizationService.getAuthorizeList(userId);
+            if (userRoleEntityElem != null) {
+                return userRoleEntityElem;
             }
         }
         return null;
@@ -43,10 +43,10 @@ public class AuthorityListRulesImpl implements AuthorityListRules {
     public void authorize(Users user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        List<UserRole> userRoleList = getAuthorizeList(user.getId());
+        List<UserRoleEntity> userRoleEntityList = getAuthorizeList(user.getId());
 
-        for (UserRole userRole : userRoleList) {
-            RoleEntity role = userRole.getRole();
+        for (UserRoleEntity userRoleEntity : userRoleEntityList) {
+            RoleEntity role = userRoleEntity.getRole();
             List<RoleAuthorityEntity> roleAuthorities = role.getRoleAuthorities();
             if (roleAuthorities != null) {
                 for (RoleAuthorityEntity ra : roleAuthorities) {

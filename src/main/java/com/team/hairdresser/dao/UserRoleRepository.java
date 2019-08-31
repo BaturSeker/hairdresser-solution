@@ -2,7 +2,7 @@ package com.team.hairdresser.dao;
 
 
 import com.team.hairdresser.domain.RoleEntity;
-import com.team.hairdresser.domain.UserRole;
+import com.team.hairdresser.domain.UserRoleEntity;
 import com.team.hairdresser.domain.Users;
 import com.team.hairdresser.utils.abstracts.BaseRepository;
 import org.springframework.stereotype.Repository;
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRoleRepository extends BaseRepository<UserRole, Long> {
+public interface UserRoleRepository extends BaseRepository<UserRoleEntity, Long> {
 
-    List<UserRole> findByUser(Users user);
+    List<UserRoleEntity> findByUser(Users user);
 
-    List<UserRole> findAllByRole(RoleEntity role);
+    List<UserRoleEntity> findAllByRole(RoleEntity role);
 }

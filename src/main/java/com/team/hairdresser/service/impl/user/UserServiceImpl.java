@@ -4,7 +4,7 @@ package com.team.hairdresser.service.impl.user;
 import com.team.hairdresser.dao.UserRoleRepository;
 import com.team.hairdresser.dao.UsersRepository;
 import com.team.hairdresser.domain.RoleEntity;
-import com.team.hairdresser.domain.UserRole;
+import com.team.hairdresser.domain.UserRoleEntity;
 import com.team.hairdresser.domain.Users;
 import com.team.hairdresser.dto.password.ResetPasswordDto;
 import com.team.hairdresser.dto.user.UserInfoResponseDto;
@@ -80,10 +80,10 @@ public class UserServiceImpl implements UserService {
             populateFromUser(u, userInfoResponseDto);
 
 
-            List<UserRole> userRoles = userRoleRepository.findByUser(u);
+            List<UserRoleEntity> userRoleEntities = userRoleRepository.findByUser(u);
             List<Long> roleIdList = new ArrayList<>();
-            for (UserRole userRole : userRoles) {
-                roleIdList.add(userRole.getRole().getId());
+            for (UserRoleEntity userRoleEntity : userRoleEntities) {
+                roleIdList.add(userRoleEntity.getRole().getId());
             }
             userInfoResponseDto.setRoleIds(roleIdList);
             userInfoResponseDtoList.add(userInfoResponseDto);
@@ -92,8 +92,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Users> findByRole(RoleEntity role) {
-        List<UserRole> userRoles = userRoleRepository.findAllByRole(role);
-        Set<Long> userIds = userRoles.stream().map(t -> t.getUser().getId()).collect(Collectors.toSet());
+        List<UserRoleEntity> userRoleEntities = userRoleRepository.findAllByRole(role);
+        Set<Long> userIds = userRoleEntities.stream().map(t -> t.getUser().getId()).collect(Collectors.toSet());
         List<Users> userListByRole = new ArrayList<>();
         for (Long userId : userIds) {
             Users user = usersRepository.getOne(userId);

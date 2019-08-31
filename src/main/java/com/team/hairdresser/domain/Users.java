@@ -72,7 +72,7 @@ public class Users extends BaseEntity<Long> {
     private Instant passwordCreatedDate;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<UserRole> userRoles = new ArrayList<>();
+    private List<UserRoleEntity> userRoleEntities = new ArrayList<>();
 
     public ZonedDateTime getLastLoginDate() {
         return lastLoginDate;
@@ -186,12 +186,12 @@ public class Users extends BaseEntity<Long> {
         this.invalidPswEntryCount = invalidPswEntryCount;
     }
 
-    public List<UserRole> getUserRoles() {
-        return userRoles;
+    public List<UserRoleEntity> getUserRoleEntities() {
+        return userRoleEntities;
     }
 
-    public void setUserRoles(List<UserRole> userRoles) {
-        this.userRoles = userRoles;
+    public void setUserRoleEntities(List<UserRoleEntity> userRoleEntities) {
+        this.userRoleEntities = userRoleEntities;
     }
 
     public Instant getLoginLockDate() {
