@@ -56,6 +56,21 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_AUTHORITY + "')")
     public void save(AuthorityRequestDto authorityRequestDto) {
+        controlSave(authorityRequestDto);
+
+        AuthorityEntity authorityEntity = new AuthorityEntity();
+        authorityEntity.setParentAuthorityEntity(authorityRepository.getOne(authorityRequestDto.getParentId()));
+        authorityEntity.setCreatedDate(CalendarHelper.getCurrentInstant());
+        authorityEntity.setMenu(authorityRequestDto.getMenu());
+        authorityEntity.setAuthorityCode(authorityRequestDto.getAuthorizeCode());
+        authorityEntity.setTitle(authorityRequestDto.getTitle());
+        authorityEntity.setUrl(authorityRequestDto.getUrl());
+        authorityEntity.setVisible(authorityRequestDto.getVisible());
+        authorityEntity.setIcon(authorityRequestDto.getIcon());
+        authorityRepository.save(authorityEntity);
+    }
+
+    private void controlSave(AuthorityRequestDto authorityRequestDto) {
         StringBuilder messages = new StringBuilder();
         boolean isValid = true;
         if (!Objects.nonNull(authorityRequestDto.getTitle())) {
@@ -92,22 +107,32 @@ public class AuthorityServiceImpl implements AuthorityService {
         if (!isValid) {
             throw new ValidationException(messages.toString());
         }
-
-        AuthorityEntity authorityEntity = new AuthorityEntity();
-        authorityEntity.setParentAuthorityEntity(authorityRepository.getOne(authorityRequestDto.getParentId()));
-        authorityEntity.setCreatedDate(CalendarHelper.getCurrentInstant());
-        authorityEntity.setMenu(authorityRequestDto.getMenu());
-        authorityEntity.setAuthorityCode(authorityRequestDto.getAuthorizeCode());
-        authorityEntity.setTitle(authorityRequestDto.getTitle());
-        authorityEntity.setUrl(authorityRequestDto.getUrl());
-        authorityEntity.setVisible(authorityRequestDto.getVisible());
-        authorityEntity.setIcon(authorityRequestDto.getIcon());
-        authorityRepository.save(authorityEntity);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_AUTHORITY + "')")
     public void update(Long authorityId, AuthorityRequestDto authorityRequestDto) {
+        controlUpdate(authorityId, authorityRequestDto);
+
+        AuthorityEntity authorityEntity = authorityRepository.getOne(authorityId);
+
+        if (Objects.equals(authorityEntity, null)) {
+            throw new NullObjectException(ExceptionMessages.AUTHORITY_NULL);
+        }
+        //this.cancelRoleAuthorityRelation(authorityId);
+        authorityEntity.setTitle(authorityRequestDto.getTitle());
+        authorityEntity.setIcon(authorityRequestDto.getIcon());
+        authorityRepository.save(authorityEntity);
+    }
+
+    private void cancelRoleAuthorityRelation(Long authorityId) {
+        List<RoleAuthorityEntity> roleAuthorities = roleAuthorityRepository.findAllByAuthorityEntity(authorityRepository.getOne(authorityId));
+        for (RoleAuthorityEntity roleAuthorityEntity : roleAuthorities) {
+            roleAuthorityRepository.delete(roleAuthorityEntity);
+        }
+    }
+
+    private void controlUpdate(Long authorityId, AuthorityRequestDto authorityRequestDto) {
         StringBuilder messages = new StringBuilder();
         boolean isValid = true;
         if (!Objects.nonNull(authorityRequestDto)) {
@@ -129,23 +154,6 @@ public class AuthorityServiceImpl implements AuthorityService {
         }
         if (!isValid) {
             throw new ValidationException(messages.toString());
-        }
-
-        AuthorityEntity authorityEntity = authorityRepository.getOne(authorityId);
-
-        if (Objects.equals(authorityEntity, null)) {
-            throw new NullObjectException(ExceptionMessages.AUTHORITY_NULL);
-        }
-        //this.cancelRoleAuthorityRelation(authorityId);
-        authorityEntity.setTitle(authorityRequestDto.getTitle());
-        authorityEntity.setIcon(authorityRequestDto.getIcon());
-        authorityRepository.save(authorityEntity);
-    }
-
-    private void cancelRoleAuthorityRelation(Long authorityId) {
-        List<RoleAuthorityEntity> roleAuthorities = roleAuthorityRepository.findAllByAuthorityEntity(authorityRepository.getOne(authorityId));
-        for (RoleAuthorityEntity roleAuthorityEntity : roleAuthorities) {
-            roleAuthorityRepository.delete(roleAuthorityEntity);
         }
     }
 
