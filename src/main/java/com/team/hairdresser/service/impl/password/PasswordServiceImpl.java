@@ -6,7 +6,6 @@ import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.password.SetNewPasswordRequestDto;
 import com.team.hairdresser.dto.user.UserRequestDto;
 import com.team.hairdresser.service.api.password.PasswordService;
-import com.team.hairdresser.service.api.user.UserRules;
 import com.team.hairdresser.service.api.user.UserService;
 import com.team.hairdresser.utils.util.CalendarHelper;
 import com.team.hairdresser.utils.util.HashUtils;
@@ -37,7 +36,6 @@ public class PasswordServiceImpl implements PasswordService, ResourceLoaderAware
     private static final Logger LOGGER = LoggerFactory.getLogger(PasswordServiceImpl.class);
 
     private UserService userService;
-    private UserRules userRules;
     private ResourceLoader resourceLoader;
 
     @Override
@@ -155,7 +153,7 @@ public class PasswordServiceImpl implements PasswordService, ResourceLoaderAware
     public void resetPassword(Long userId) throws NoSuchAlgorithmException {
         StringBuilder messages = new StringBuilder();
         boolean isValidPass = true;
-        if (!ValidationHelper.notNull(this.userRules.getUser(userId))) {
+        if (!ValidationHelper.notNull(this.userService.getUser(userId))) {
             isValidPass = false;
             messages.append(ExceptionMessages.RESET_PASSWORD_USER_NOT_NULL);
             messages.append(System.lineSeparator());
@@ -163,7 +161,7 @@ public class PasswordServiceImpl implements PasswordService, ResourceLoaderAware
         if (!isValidPass) {
             throw new ValidationException(messages.toString());
         }
-        UserEntity user = this.userRules.getUser(userId);
+        UserEntity user = this.userService.getUser(userId);
         setIsTemproraryPassword(user);
     }
 
@@ -252,11 +250,6 @@ public class PasswordServiceImpl implements PasswordService, ResourceLoaderAware
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
-    }
-
-    @Autowired
-    public void setUserRules(UserRules userRules) {
-        this.userRules = userRules;
     }
 
     @Autowired

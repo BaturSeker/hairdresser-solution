@@ -13,7 +13,7 @@ import com.team.hairdresser.domain.UserRoleEntity;
 import com.team.hairdresser.dto.role.RoleRequestDto;
 import com.team.hairdresser.dto.user.UserRoleRequestDto;
 import com.team.hairdresser.service.api.role.RoleService;
-import com.team.hairdresser.service.api.user.UserRules;
+import com.team.hairdresser.service.api.user.UserService;
 import com.team.hairdresser.utils.util.ComboResponseBuilder;
 import com.team.hairdresser.utils.util.ValidationHelper;
 import com.team.hairdresser.utils.util.exception.NullObjectException;
@@ -36,7 +36,7 @@ public class RoleServiceImpl implements RoleService {
     private RoleRepository roleRepository;
     private UserRoleRepository userRoleRepository;
     private UsersRepository usersRepository;
-    private UserRules userRules;
+    private UserService userService;
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.CREATE_ROLE + "')")
@@ -118,7 +118,7 @@ public class RoleServiceImpl implements RoleService {
         deleteControl(roleId);
 
         RoleEntity role = roleRepository.getOne(roleId);
-        List<UserEntity> users = userRules.findByRole(role);
+        List<UserEntity> users = userService.findByRole(role);
         if (!users.isEmpty()) {
             throw new ValidationException("Bu role atanmış kullanıcılar olduğundan Bu Rol Silinemez.");
         }
@@ -224,7 +224,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Autowired
-    public void setUserRules(UserRules userRules) {
-        this.userRules = userRules;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 }

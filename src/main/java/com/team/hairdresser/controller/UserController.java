@@ -10,7 +10,7 @@ import com.team.hairdresser.dto.user.UserInfoResponseDto;
 import com.team.hairdresser.dto.user.UserResponseDto;
 import com.team.hairdresser.service.api.authority.AuthorizationService;
 import com.team.hairdresser.service.api.password.PasswordService;
-import com.team.hairdresser.service.api.user.UserRules;
+import com.team.hairdresser.service.api.user.UserService;
 import com.team.hairdresser.utils.pageablesearch.model.PageRequestDto;
 import com.team.hairdresser.utils.pageablesearch.model.PageableSearchFilterDto;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    private UserRules userRules;
+    private UserService userService;
     private PasswordService passwordService;
     private AuthorizationService authorizationService;
 
@@ -41,7 +41,7 @@ public class UserController {
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getUser(@PathVariable Long userId) {
         try {
-            UserEntity user = userRules.getUser(userId);
+            UserEntity user = userService.getUser(userId);
             UserResponseDto userResponseDto = new UserResponseDto();
             userResponseDto.setUsername(user.getUsername());
             userResponseDto.setName(user.getFirstname());
@@ -62,7 +62,7 @@ public class UserController {
     @GetMapping("index")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAllUsers() {
-        List<UserEntity> userList = userRules.read();
+        List<UserEntity> userList = userService.getAllUsers();
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
@@ -76,32 +76,32 @@ public class UserController {
     @GetMapping("getComboUsers")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getComboUsers() {
-        List userList = userRules.getComboUsers();
+        List userList = userService.getComboUsers();
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
     @GetMapping(value = "getAll")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAll() {
-        return ResponseEntity.ok(userRules.getUserInfoPage(PageRequest.of(0, 10000)).getContent());
+        return ResponseEntity.ok(userService.getUserInfoPage(PageRequest.of(0, 10000)).getContent());
     }
 
     @GetMapping(value = "getUser/{viewId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAll(@Valid @PathVariable Integer viewId) {
-        return ResponseEntity.ok(userRules.getUserInfoPage(PageRequest.of(0, 10000)).getContent().get(viewId - 1));
+        return ResponseEntity.ok(userService.getUserInfoPage(PageRequest.of(0, 10000)).getContent().get(viewId - 1));
     }
 
     @PostMapping("getUserInfoPage")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity<Page<UserInfoResponseDto>> getUserInfoPage(@RequestBody PageRequestDto pageRequest) {
-        return ResponseEntity.ok(userRules.getUserInfoPage(PageRequest.of(pageRequest.getPage(), pageRequest.getSize())));
+        return ResponseEntity.ok(userService.getUserInfoPage(PageRequest.of(pageRequest.getPage(), pageRequest.getSize())));
     }
 
     @PostMapping("getFilteredUsers")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity<Page<UserInfoResponseDto>> getFilteredUsers(@RequestBody PageableSearchFilterDto pageRequest) {
-        Page<UserInfoResponseDto> response = userRules.getUsersFiltered(pageRequest);
+        Page<UserInfoResponseDto> response = userService.getUsersFiltered(pageRequest);
         return ResponseEntity.ok(response);
     }
 
@@ -110,23 +110,16 @@ public class UserController {
     public ResponseEntity resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
         String message = null;
         try {
-            message = userRules.resetPassword(resetPasswordDto);
+            message = userService.resetPassword(resetPasswordDto);
         } catch (NoSuchAlgorithmException e) {
             LOGGER.error("error in userController", e);
         }
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.USER_TEMP_PASSWORD_TITLE, message), HttpStatus.OK);
     }
 
-    @GetMapping("getAllUser/{locationId}")
-    @PreAuthorize("@CheckPermission.hasPermission(authentication)")
-    public ResponseEntity getAllUser(@PathVariable Integer locationId) {
-        List<UserEntity> userList = userRules.getAllUser(locationId);
-        return new ResponseEntity<>(userList, HttpStatus.OK);
-    }
-
     @Autowired
-    public void setUserRules(UserRules userRules) {
-        this.userRules = userRules;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @Autowired

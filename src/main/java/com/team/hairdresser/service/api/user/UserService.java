@@ -12,6 +12,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public interface UserService {
+    void saveAll(List<UserEntity> userList);
+
     void save(UserEntity user);
 
     UserEntity getUser(Long userId);
@@ -30,8 +32,6 @@ public interface UserService {
 //    Integer saveUserImage(UserImageDto userImageDto);
 
     String resetPassword(ResetPasswordDto resetPasswordDto) throws NoSuchAlgorithmException;
-
-    List<UserEntity> getAllUser(Integer locationId);
 
     String getUserInfo(UserEntity user);
 
