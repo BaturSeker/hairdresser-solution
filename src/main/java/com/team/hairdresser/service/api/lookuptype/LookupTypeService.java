@@ -13,6 +13,8 @@ public interface LookupTypeService {
 
     LookupTypeEntity getLookupType(Integer lookupTypeId);
 
+    LookupTypeEntity read(Integer genericTypeId);
+
     List<LookupTypeEntity> readAll();
 
     Page<LookupTypeDto> getAll(PageableSearchFilterDto filterDto);

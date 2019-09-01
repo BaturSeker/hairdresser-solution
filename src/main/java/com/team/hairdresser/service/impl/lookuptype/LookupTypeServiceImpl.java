@@ -2,6 +2,7 @@ package com.team.hairdresser.service.impl.lookuptype;
 
 
 import com.team.hairdresser.constant.LookupTypeEnum;
+import com.team.hairdresser.constant.ValidationMessages;
 import com.team.hairdresser.dao.LookupTypeRepository;
 import com.team.hairdresser.dao.LookupValueRepository;
 import com.team.hairdresser.domain.lookuptype.LookupTypeEntity;
@@ -12,12 +13,16 @@ import com.team.hairdresser.service.api.lookuptype.LookupTypeService;
 import com.team.hairdresser.utils.pageablesearch.model.PageRequestDto;
 import com.team.hairdresser.utils.pageablesearch.model.PageableSearchFilterDto;
 import com.team.hairdresser.utils.pageablesearch.specification.SearchSpecificationBuilder;
+import com.team.hairdresser.utils.util.ValidationHelper;
+import com.team.hairdresser.utils.util.exception.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +37,8 @@ public class LookupTypeServiceImpl implements LookupTypeService {
 
     @Override
     public LookupTypeEntity save(LookupTypeDto lookupTypeDto) {
+        controlSave(lookupTypeDto);
+
         LookupTypeEntity lookupTypeEntity = new LookupTypeEntity();
         lookupTypeEntity.setName(lookupTypeDto.getName());
         lookupTypeEntity.setTypeEnum(LookupTypeEnum.fromLookupTypeEnumId(lookupTypeDto.getLookupTypeEnumId()));
@@ -45,17 +52,51 @@ public class LookupTypeServiceImpl implements LookupTypeService {
         return lookupTypeRepository.saveAndFlush(lookupTypeEntity);
     }
 
+    private void controlSave(LookupTypeDto lookupTypeDto) {
+
+        StringBuilder messages = new StringBuilder();
+
+        boolean isValid = true;
+        if (!ValidationHelper.notEmpty(lookupTypeDto.getName())) {
+            isValid = false;
+            messages.append(ValidationMessages.LOOKUP_TYPE_TYPE);
+            messages.append(System.lineSeparator());
+        }
+
+        if (!isValid) {
+            throw new ValidationException(messages.toString());
+        }
+    }
+
     @Override
     public LookupTypeEntity getLookupType(Integer lookupTypeId) {
         return this.lookupTypeRepository.getOne(lookupTypeId);
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public LookupTypeEntity read(Integer genericTypeId) {
+        StringBuilder messages = new StringBuilder();
+        boolean isValid = true;
+        if (!ValidationHelper.notEmpty(genericTypeId)) {
+            isValid = false;
+            messages.append(ValidationMessages.LOOKUP_TYPE_ID);
+            messages.append(System.lineSeparator());
+        }
+        if (!isValid) {
+            throw new ValidationException(messages.toString());
+        }
+        return getLookupType(genericTypeId);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<LookupTypeEntity> readAll() {
         return this.lookupTypeRepository.findAll();
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<LookupTypeDto> getAll(PageableSearchFilterDto filterDto) {
 
         SearchSpecificationBuilder<LookupTypeEntity> specificationBuilder =
@@ -106,9 +147,29 @@ public class LookupTypeServiceImpl implements LookupTypeService {
 
     @Override
     public LookupTypeEntity update(Integer lookupTypeId, LookupTypeDto lookupTypeDto) {
+        controlUpdate(lookupTypeId, lookupTypeDto);
+
         LookupTypeEntity lookupTypeEntity = this.lookupTypeRepository.getOne(lookupTypeId);
         lookupTypeEntity.setName(lookupTypeDto.getName());
         return this.lookupTypeRepository.saveAndFlush(lookupTypeEntity);
+    }
+
+    private void controlUpdate(Integer lookupTypeId, LookupTypeDto lookupTypeDto) {
+        StringBuilder messages = new StringBuilder();
+        boolean isValid = true;
+        if (!ValidationHelper.notEmpty(lookupTypeDto.getName())) {
+            isValid = false;
+            messages.append(ValidationMessages.LOOKUP_TYPE_TYPE);
+            messages.append(System.lineSeparator());
+        }
+        if (!ValidationHelper.notEmpty(lookupTypeId)) {
+            isValid = false;
+            messages.append(ValidationMessages.LOOKUP_TYPE_ID);
+            messages.append(System.lineSeparator());
+        }
+        if (!isValid) {
+            throw new ValidationException(messages.toString());
+        }
     }
 
     @Autowired

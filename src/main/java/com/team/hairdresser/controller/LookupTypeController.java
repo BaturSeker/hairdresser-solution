@@ -7,8 +7,8 @@ import com.team.hairdresser.domain.lookuptype.LookupValueEntity;
 import com.team.hairdresser.dto.SuccessResponseDto;
 import com.team.hairdresser.dto.lookuptype.LookupTypeDto;
 import com.team.hairdresser.dto.lookuptype.LookupValueDto;
-import com.team.hairdresser.service.api.lookuptype.LookupTypeRules;
-import com.team.hairdresser.service.api.lookuptype.LookupValueRules;
+import com.team.hairdresser.service.api.lookuptype.LookupTypeService;
+import com.team.hairdresser.service.api.lookuptype.LookupValueService;
 import com.team.hairdresser.service.impl.lookuptype.LookupTypeMapper;
 import com.team.hairdresser.service.impl.lookuptype.LookupValueMapper;
 import com.team.hairdresser.utils.pageablesearch.model.PageableSearchFilterDto;
@@ -26,41 +26,41 @@ import java.util.List;
 @RequestMapping("rest/lookupType")
 public class LookupTypeController {
 
-    private LookupTypeRules lookupTypeRules;
-    private LookupValueRules lookupValueRules;
+    private LookupTypeService lookupTypeService;
+    private LookupValueService lookupValueService;
 
     @PostMapping()
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity saveType(@Valid @RequestBody LookupTypeDto lookupTypeDto) {
-        lookupTypeRules.save(lookupTypeDto);
+        lookupTypeService.save(lookupTypeDto);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.GENERIC_TYPE_CREATE_TITLE, SuccessMessages.GENERIC_TYPE_CREATE_MESSAGE), HttpStatus.OK);
     }
 
     @PostMapping("value")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity saveValue(@Valid @RequestBody LookupValueDto lookupValueDto) {
-        lookupValueRules.save(lookupValueDto);
+        lookupValueService.save(lookupValueDto);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.GENERIC_TYPE_VALUE_CREATE_TITLE, SuccessMessages.GENERIC_TYPE_VALUE_CREATE_MESSAGE), HttpStatus.OK);
     }
 
     @PutMapping(value = "{lookupTypeId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity updateType(@PathVariable Integer lookupTypeId, @Valid @RequestBody LookupTypeDto lookupTypeDto) {
-        lookupTypeRules.update(lookupTypeId, lookupTypeDto);
+        lookupTypeService.update(lookupTypeId, lookupTypeDto);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.GENERIC_TYPE_UPDATE_TITLE, SuccessMessages.GENERIC_TYPE_UPDATE_MESSAGE), HttpStatus.OK);
     }
 
     @PutMapping(value = "value/{lookupValueId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity updateValue(@PathVariable Integer lookupValueId, @Valid @RequestBody String value) {
-        lookupValueRules.update(lookupValueId, value);
+        lookupValueService.update(lookupValueId, value);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.GENERIC_TYPE_VALUE_UPDATE_TITLE, SuccessMessages.GENERIC_TYPE_VALUE_UPDATE_MESSAGE), HttpStatus.OK);
     }
 
     @GetMapping(value = "value/{lookupValueId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity readValue(@PathVariable Integer lookupValueId) {
-        LookupValueEntity lookupValueEntity = lookupValueRules.read(lookupValueId);
+        LookupValueEntity lookupValueEntity = lookupValueService.read(lookupValueId);
         LookupValueDto lookupValueDto = LookupValueMapper.INSTANCE.entityToDto(lookupValueEntity);
         return new ResponseEntity<>(lookupValueDto, HttpStatus.OK);
     }
@@ -68,7 +68,7 @@ public class LookupTypeController {
     @GetMapping(value = "{lookupTypeId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity readType(@PathVariable Integer lookupTypeId) {
-        LookupTypeEntity lookupTypeEntity = lookupTypeRules.read(lookupTypeId);
+        LookupTypeEntity lookupTypeEntity = lookupTypeService.read(lookupTypeId);
         LookupTypeDto lookupTypeDto = LookupTypeMapper.INSTANCE.entityToDto(lookupTypeEntity);
         return new ResponseEntity<>(lookupTypeDto, HttpStatus.OK);
     }
@@ -76,7 +76,7 @@ public class LookupTypeController {
     @GetMapping("getAll")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity readType() {
-        List<LookupTypeEntity> lookupTypeEntities = lookupTypeRules.readAll();
+        List<LookupTypeEntity> lookupTypeEntities = lookupTypeService.readAll();
         List<LookupTypeDto> lookupTypeDtos = LookupTypeMapper.INSTANCE.entityListToDtoList(lookupTypeEntities);
         return new ResponseEntity<>(lookupTypeDtos, HttpStatus.OK);
     }
@@ -84,39 +84,39 @@ public class LookupTypeController {
     @PostMapping("list")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity<Page<LookupTypeDto>> getLookupTypePage(@RequestBody PageableSearchFilterDto pageRequest) {
-        Page<LookupTypeDto> response = lookupTypeRules.getAll(pageRequest);
+        Page<LookupTypeDto> response = lookupTypeService.getAll(pageRequest);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("values/{lookupTypeId}/getAll")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity readTypeValues(@PathVariable Integer lookupTypeId) {
-        List<LookupValueDto> lookupValueDtos = LookupValueMapper.INSTANCE.entityListToDtoList(lookupValueRules.readAllByLookupTypeId(lookupTypeId));
+        List<LookupValueDto> lookupValueDtos = LookupValueMapper.INSTANCE.entityListToDtoList(lookupValueService.readAllByLookupTypeId(lookupTypeId));
         return new ResponseEntity<>(lookupValueDtos, HttpStatus.OK);
     }
 
     @GetMapping("values/getIcons")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getIcons() {
-        List<LookupValueDto> lookupValueDtos = LookupValueMapper.INSTANCE.entityListToDtoList(lookupValueRules.readAllIcons());
+        List<LookupValueDto> lookupValueDtos = LookupValueMapper.INSTANCE.entityListToDtoList(lookupValueService.readAllIcon());
         return new ResponseEntity<>(lookupValueDtos, HttpStatus.OK);
     }
 
     @DeleteMapping("value/{lookupValueId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity changeActiveOfLookupValue(@PathVariable Integer lookupValueId) {
-        this.lookupValueRules.changeActive(lookupValueId);
+        lookupValueService.changeActive(lookupValueId);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.GENERIC_TYPE_VALUE_UPDATE_TITLE, SuccessMessages.GENERIC_TYPE_VALUE_UPDATE_MESSAGE), HttpStatus.OK);
     }
 
     @Autowired
-    public void setLookupTypeRules(LookupTypeRules lookupTypeRules) {
-        this.lookupTypeRules = lookupTypeRules;
+    public void setLookupTypeService(LookupTypeService lookupTypeService) {
+        this.lookupTypeService = lookupTypeService;
     }
 
     @Autowired
-    public void setLookupValueRules(LookupValueRules lookupValueRules) {
-        this.lookupValueRules = lookupValueRules;
+    public void setLookupValueService(LookupValueService lookupValueService) {
+        this.lookupValueService = lookupValueService;
     }
 }
 
