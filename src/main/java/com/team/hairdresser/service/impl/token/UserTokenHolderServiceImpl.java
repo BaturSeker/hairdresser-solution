@@ -19,7 +19,7 @@ public class UserTokenHolderServiceImpl {
     public RestTemplate getTokenizedRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         if (token != null) {
-            restTemplate.setInterceptors(Collections.singletonList(new TokenInjectInterceptor(token)));
+            restTemplate.setInterceptors(Collections.singletonList(new TokenInjectionInterceptor(token)));
             restTemplate.setErrorHandler(new RestTemplateResponseErrorHandler());
         }
         return restTemplate;

@@ -8,11 +8,11 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.IOException;
 
-public class TokenInjectInterceptor implements ClientHttpRequestInterceptor {
+public class TokenInjectionInterceptor implements ClientHttpRequestInterceptor {
 
     private String token;
 
-    public TokenInjectInterceptor(String token) {
+    public TokenInjectionInterceptor(String token) {
         this.token = token;
     }
 
