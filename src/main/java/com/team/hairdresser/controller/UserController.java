@@ -9,7 +9,7 @@ import com.team.hairdresser.dto.password.ResetPasswordDto;
 import com.team.hairdresser.dto.user.UserInfoResponseDto;
 import com.team.hairdresser.dto.user.UserResponseDto;
 import com.team.hairdresser.service.api.authority.AuthorizationService;
-import com.team.hairdresser.service.api.password.PasswordRules;
+import com.team.hairdresser.service.api.password.PasswordService;
 import com.team.hairdresser.service.api.user.UserRules;
 import com.team.hairdresser.utils.pageablesearch.model.PageRequestDto;
 import com.team.hairdresser.utils.pageablesearch.model.PageableSearchFilterDto;
@@ -34,7 +34,7 @@ public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     private UserRules userRules;
-    private PasswordRules passwordRules;
+    private PasswordService passwordService;
     private AuthorizationService authorizationService;
 
     @GetMapping("{userId}")
@@ -130,8 +130,8 @@ public class UserController {
     }
 
     @Autowired
-    public void setPasswordRules(PasswordRules passwordRules) {
-        this.passwordRules = passwordRules;
+    public void setPasswordService(PasswordService passwordService) {
+        this.passwordService = passwordService;
     }
 
     @Autowired

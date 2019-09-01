@@ -5,7 +5,7 @@ import com.team.hairdresser.constant.ExceptionMessages;
 import com.team.hairdresser.domain.UserEntity;
 import com.team.hairdresser.dto.password.SetNewPasswordRequestDto;
 import com.team.hairdresser.dto.user.UserRequestDto;
-import com.team.hairdresser.service.api.password.PasswordRules;
+import com.team.hairdresser.service.api.password.PasswordService;
 import com.team.hairdresser.service.api.user.UserRules;
 import com.team.hairdresser.service.api.user.UserService;
 import com.team.hairdresser.utils.util.CalendarHelper;
@@ -32,9 +32,9 @@ import java.util.List;
 import java.util.Scanner;
 
 @Service
-public class PasswordRulesImpl implements PasswordRules, ResourceLoaderAware {
+public class PasswordServiceImpl implements PasswordService, ResourceLoaderAware {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PasswordRulesImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PasswordServiceImpl.class);
 
     private UserService userService;
     private UserRules userRules;

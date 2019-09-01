@@ -7,7 +7,7 @@ import com.team.hairdresser.dto.user.UserRequestDto;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-public interface PasswordRules {
+public interface PasswordService {
     void passwordValidation(UserRequestDto userRequestDto);
 
     boolean isPasswordValid(String password);

@@ -5,7 +5,7 @@ import com.team.hairdresser.constant.SuccessMessages;
 import com.team.hairdresser.dto.SuccessResponseDto;
 import com.team.hairdresser.dto.password.SetNewPasswordRequestDto;
 import com.team.hairdresser.dto.user.UserRequestDto;
-import com.team.hairdresser.service.api.password.PasswordRules;
+import com.team.hairdresser.service.api.password.PasswordService;
 import com.team.hairdresser.utils.util.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 @RequestMapping("/rest/password/")
 public class PasswordController {
 
-    private PasswordRules passwordRules;
+    private PasswordService passwordService;
 
     @GetMapping(value = "getPassword")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
@@ -28,7 +28,7 @@ public class PasswordController {
         PasswordGenerator passwordGenerator = new PasswordGenerator();
         String password = null;
         password = passwordGenerator.generate(10);
-        while (!passwordRules.isPasswordValid(password)) {
+        while (!passwordService.isPasswordValid(password)) {
             password = passwordGenerator.generate(10);
         }
         return new ResponseEntity<>(password, HttpStatus.OK);
@@ -37,7 +37,7 @@ public class PasswordController {
     @PostMapping(value = "validatePassword")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity validatePassword(@Valid @RequestBody UserRequestDto userRequestDto) {
-        passwordRules.passwordValidation(userRequestDto);
+        passwordService.passwordValidation(userRequestDto);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.VALIDATE_PASSWORD_TITLE, SuccessMessages.VALIDATE_PASSWORD_MESSAGE), HttpStatus.OK);
 
     }
@@ -46,20 +46,20 @@ public class PasswordController {
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity setNewPassword(@PathVariable Long userId, @Valid @RequestBody SetNewPasswordRequestDto setNewPasswordRequestDto) throws NoSuchAlgorithmException {
         setNewPasswordRequestDto.setUserId(userId);
-        passwordRules.setNewPassword(setNewPasswordRequestDto);
+        passwordService.setNewPassword(setNewPasswordRequestDto);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.NEW_PASSWORD_TITLE, SuccessMessages.NEW_PASSWORD_MESSAGE), HttpStatus.OK);
     }
 
     @GetMapping(value = "resetPassword")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity resetPassword(@RequestParam("userId") Long userId) throws NoSuchAlgorithmException {
-        passwordRules.resetPassword(userId);
+        passwordService.resetPassword(userId);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.RESET_PASSWORD_TITLE, SuccessMessages.RESET_PASSWORD_MESSAGE), HttpStatus.OK);
     }
 
     @Autowired
-    public void setPasswordRules(PasswordRules passwordRules) {
-        this.passwordRules = passwordRules;
+    public void setPasswordService(PasswordService passwordService) {
+        this.passwordService = passwordService;
     }
 }
 
