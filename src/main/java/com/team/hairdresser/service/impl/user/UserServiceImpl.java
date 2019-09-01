@@ -40,7 +40,12 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private UsersRepository usersRepository;
     private UserRoleRepository userRoleRepository;
-//    private final MailService mailService;
+
+    @Autowired
+    public UserServiceImpl(UsersRepository usersRepository, UserRoleRepository userRoleRepository) {
+        this.usersRepository = usersRepository;
+        this.userRoleRepository = userRoleRepository;
+    }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
@@ -183,7 +188,6 @@ public class UserServiceImpl implements UserService {
 
             String content = "Geçici şifreniz: " + tempPass;
             String subject = "Şifre sıfırlama";
-            sendMail(subject, content, user.getEmail());
             return "Geçici şifreniz mailinize gönderildi.";
         }
 
@@ -214,13 +218,6 @@ public class UserServiceImpl implements UserService {
         return (UserEntity) (SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }
 
-    private void sendMail(String subject, String content, String email) {
-        // TODO Mail düzeltilecek
-        String[] recipients = {"asd@tambilisim.com.tr"};
-//        Mail mail = MailBuilder.newMail().setContent(content).setHtml(true).setMultipart(false).setRecipent(recipients).setSubject(subject).build();
-//        mailService.sendEmail(mail);
-    }
-
     private void populateFromUser(UserEntity u, UserInfoResponseDto userInfoResponseDto) {
         userInfoResponseDto.setName(u.getFirstname());
         userInfoResponseDto.setSurname(u.getSurname());
@@ -228,16 +225,6 @@ public class UserServiceImpl implements UserService {
         userInfoResponseDto.setMobile(u.getMobilePhone());
         userInfoResponseDto.setTelephone(u.getTelephone());
         userInfoResponseDto.setActive(u.getActive());
-    }
-
-    @Autowired
-    public void setUsersRepository(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
-    }
-
-    @Autowired
-    public void setUserRoleRepository(UserRoleRepository userRoleRepository) {
-        this.userRoleRepository = userRoleRepository;
     }
 }
 

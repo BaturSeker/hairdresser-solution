@@ -24,6 +24,11 @@ import java.util.List;
 public class AuthorityController {
     private AuthorityService authorityService;
 
+    @Autowired
+    public AuthorityController(AuthorityService authorityService) {
+        this.authorityService = authorityService;
+    }
+
     @GetMapping(value = "{authorityId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getAuthority(@PathVariable Long authorityId) {
@@ -80,10 +85,6 @@ public class AuthorityController {
         return ResponseEntity.ok(response);
     }
 
-    @Autowired
-    public void setAuthorityService(AuthorityService authorityService) {
-        this.authorityService = authorityService;
-    }
 }
 
 

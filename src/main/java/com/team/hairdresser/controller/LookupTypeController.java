@@ -29,6 +29,12 @@ public class LookupTypeController {
     private LookupTypeService lookupTypeService;
     private LookupValueService lookupValueService;
 
+    @Autowired
+    public LookupTypeController(LookupTypeService lookupTypeService, LookupValueService lookupValueService) {
+        this.lookupTypeService = lookupTypeService;
+        this.lookupValueService = lookupValueService;
+    }
+
     @PostMapping()
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity saveType(@Valid @RequestBody LookupTypeDto lookupTypeDto) {
@@ -107,16 +113,6 @@ public class LookupTypeController {
     public ResponseEntity changeActiveOfLookupValue(@PathVariable Integer lookupValueId) {
         lookupValueService.changeActive(lookupValueId);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.GENERIC_TYPE_VALUE_UPDATE_TITLE, SuccessMessages.GENERIC_TYPE_VALUE_UPDATE_MESSAGE), HttpStatus.OK);
-    }
-
-    @Autowired
-    public void setLookupTypeService(LookupTypeService lookupTypeService) {
-        this.lookupTypeService = lookupTypeService;
-    }
-
-    @Autowired
-    public void setLookupValueService(LookupValueService lookupValueService) {
-        this.lookupValueService = lookupValueService;
     }
 }
 

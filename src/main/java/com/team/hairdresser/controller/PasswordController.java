@@ -22,6 +22,11 @@ public class PasswordController {
 
     private PasswordService passwordService;
 
+    @Autowired
+    public PasswordController(PasswordService passwordService) {
+        this.passwordService = passwordService;
+    }
+
     @GetMapping(value = "getPassword")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getPassword() {
@@ -55,11 +60,6 @@ public class PasswordController {
     public ResponseEntity resetPassword(@RequestParam("userId") Long userId) throws NoSuchAlgorithmException {
         passwordService.resetPassword(userId);
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.RESET_PASSWORD_TITLE, SuccessMessages.RESET_PASSWORD_MESSAGE), HttpStatus.OK);
-    }
-
-    @Autowired
-    public void setPasswordService(PasswordService passwordService) {
-        this.passwordService = passwordService;
     }
 }
 

@@ -38,6 +38,15 @@ public class RoleServiceImpl implements RoleService {
     private UsersRepository usersRepository;
     private UserService userService;
 
+    @Autowired
+    public RoleServiceImpl(RoleRepository roleRepository, UserRoleRepository userRoleRepository,
+                           UsersRepository usersRepository, UserService userService) {
+        this.roleRepository = roleRepository;
+        this.userRoleRepository = userRoleRepository;
+        this.usersRepository = usersRepository;
+        this.userService = userService;
+    }
+
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.CREATE_ROLE + "')")
     public void save(RoleRequestDto roleRequestDto) {
@@ -206,25 +215,5 @@ public class RoleServiceImpl implements RoleService {
     public List getComboRoles() {
         List<Object[]> resultList = roleRepository.findRolesAsComboValues();
         return ComboResponseBuilder.buildComboResponseList(resultList);
-    }
-
-    @Autowired
-    public void setUsersRepository(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
-    }
-
-    @Autowired
-    public void setRoleRepository(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
-
-    @Autowired
-    public void setUserRoleRepository(UserRoleRepository userRoleRepository) {
-        this.userRoleRepository = userRoleRepository;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
     }
 }

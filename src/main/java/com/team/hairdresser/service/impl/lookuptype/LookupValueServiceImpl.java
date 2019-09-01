@@ -29,6 +29,12 @@ public class LookupValueServiceImpl implements LookupValueService {
     private LookupValueRepository lookupValueRepository;
     private LookupTypeRepository lookupTypeRepository;
 
+    @Autowired
+    public LookupValueServiceImpl(LookupValueRepository lookupValueRepository, LookupTypeRepository lookupTypeRepository) {
+        this.lookupValueRepository = lookupValueRepository;
+        this.lookupTypeRepository = lookupTypeRepository;
+    }
+
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_LOOKUP_VALUE_MANAGEMENT + "')")
     public List<LookupValueDto> getAllValuesByLookupTypeEnum(LookupTypeEnum typeEnum) {
@@ -180,13 +186,4 @@ public class LookupValueServiceImpl implements LookupValueService {
         this.lookupValueRepository.save(lookupValueEntity);
     }
 
-    @Autowired
-    public void setLookupValueRepository(LookupValueRepository lookupValueRepository) {
-        this.lookupValueRepository = lookupValueRepository;
-    }
-
-    @Autowired
-    public void setLookupTypeRepository(LookupTypeRepository lookupTypeRepository) {
-        this.lookupTypeRepository = lookupTypeRepository;
-    }
 }

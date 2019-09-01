@@ -38,6 +38,16 @@ public class PasswordServiceImpl implements PasswordService, ResourceLoaderAware
     private UserService userService;
     private ResourceLoader resourceLoader;
 
+    @Autowired
+    public PasswordServiceImpl(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
+
     @Override
     public void passwordValidation(UserRequestDto userRequest) throws ValidationException {
         boolean isValidPass = true;
@@ -245,15 +255,5 @@ public class PasswordServiceImpl implements PasswordService, ResourceLoaderAware
             messages.append(ExceptionMessages.CONSTRAINT_DICTIONARY_WORD);
             throw new ValidationException(messages.toString());
         }
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
     }
 }

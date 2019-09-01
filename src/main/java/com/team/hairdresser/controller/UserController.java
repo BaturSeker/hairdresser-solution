@@ -37,6 +37,13 @@ public class UserController {
     private PasswordService passwordService;
     private AuthorizationService authorizationService;
 
+    @Autowired
+    public UserController(UserService userService, PasswordService passwordService, AuthorizationService authorizationService) {
+        this.userService = userService;
+        this.passwordService = passwordService;
+        this.authorizationService = authorizationService;
+    }
+
     @GetMapping("{userId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getUser(@PathVariable Long userId) {
@@ -115,21 +122,6 @@ public class UserController {
             LOGGER.error("error in userController", e);
         }
         return new ResponseEntity<>(new SuccessResponseDto(SuccessMessages.USER_TEMP_PASSWORD_TITLE, message), HttpStatus.OK);
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setPasswordService(PasswordService passwordService) {
-        this.passwordService = passwordService;
-    }
-
-    @Autowired
-    public void setAuthorizationService(AuthorizationService authorizationService) {
-        this.authorizationService = authorizationService;
     }
 }
 

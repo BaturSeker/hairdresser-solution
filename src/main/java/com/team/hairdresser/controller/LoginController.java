@@ -36,6 +36,16 @@ public class LoginController {
     private JwtUtil jwtUtil;
     private ActiveDirectoryHelper activeDirectoryHelper;
 
+    @Autowired
+    public LoginController(LoginService loginService, AuthorizationService authorizationService,
+                           AuthorityService authorityService, JwtUtil jwtUtil,
+                           ActiveDirectoryHelper activeDirectoryHelper) {
+        this.loginService = loginService;
+        this.authorizationService = authorizationService;
+        this.authorityService = authorityService;
+        this.jwtUtil = jwtUtil;
+        this.activeDirectoryHelper = activeDirectoryHelper;
+    }
 
     @PostMapping("login")
     public ResponseEntity login(@RequestBody LoginRequestDto loginRequestDto) throws Exception {
@@ -126,31 +136,6 @@ public class LoginController {
             authorityResponseDto.setAuthorityCode(authorityEntity.getAuthorityCode());
         }
         return authorityResponsDtos;
-    }
-
-    @Autowired
-    public void setLoginService(LoginService loginService) {
-        this.loginService = loginService;
-    }
-
-    @Autowired
-    public void setAuthorizationService(AuthorizationService authorizationService) {
-        this.authorizationService = authorizationService;
-    }
-
-    @Autowired
-    public void setJwtUtil(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
-
-    @Autowired
-    public void setActiveDirectoryHelper(ActiveDirectoryHelper activeDirectoryHelper) {
-        this.activeDirectoryHelper = activeDirectoryHelper;
-    }
-
-    @Autowired
-    public void setAuthorityService(AuthorityService authorityService) {
-        this.authorityService = authorityService;
     }
 }
 

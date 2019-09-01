@@ -25,6 +25,12 @@ public class RoleController {
     private RoleService roleService;
     private AuthorityService authorityService;
 
+    @Autowired
+    public RoleController(RoleService roleService, AuthorityService authorityService) {
+        this.roleService = roleService;
+        this.authorityService = authorityService;
+    }
+
     @GetMapping(value = "{roleId}")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getRole(@PathVariable Long roleId) {
@@ -73,16 +79,6 @@ public class RoleController {
     public ResponseEntity getComboRoles() {
         List roleList = roleService.getComboRoles();
         return new ResponseEntity<>(roleList, HttpStatus.OK);
-    }
-
-    @Autowired
-    public void setRoleService(RoleService roleService) {
-        this.roleService = roleService;
-    }
-
-    @Autowired
-    public void setAuthorityService(AuthorityService authorityService) {
-        this.authorityService = authorityService;
     }
 }
 

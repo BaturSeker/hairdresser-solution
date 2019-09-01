@@ -35,6 +35,12 @@ public class LookupTypeServiceImpl implements LookupTypeService {
     private LookupTypeRepository lookupTypeRepository;
     private LookupValueRepository lookupValueRepository;
 
+    @Autowired
+    public LookupTypeServiceImpl(LookupTypeRepository lookupTypeRepository, LookupValueRepository lookupValueRepository) {
+        this.lookupTypeRepository = lookupTypeRepository;
+        this.lookupValueRepository = lookupValueRepository;
+    }
+
     @Override
     public LookupTypeEntity save(LookupTypeDto lookupTypeDto) {
         controlSave(lookupTypeDto);
@@ -172,15 +178,6 @@ public class LookupTypeServiceImpl implements LookupTypeService {
         }
     }
 
-    @Autowired
-    public void setLookupTypeRepository(LookupTypeRepository lookupTypeRepository) {
-        this.lookupTypeRepository = lookupTypeRepository;
-    }
-
-    @Autowired
-    public void setLookupValueRepository(LookupValueRepository lookupValueRepository) {
-        this.lookupValueRepository = lookupValueRepository;
-    }
 }
 
 
