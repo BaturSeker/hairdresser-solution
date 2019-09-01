@@ -96,7 +96,6 @@ public class LoginController {
 
     }
 
-
     @GetMapping("getAnonymousUserAuthorities")
     @PreAuthorize("@CheckPermission.hasPermission(authentication)")
     public ResponseEntity getCustomerUserAuthorities() {
