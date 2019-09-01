@@ -23,6 +23,7 @@ import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Scanner;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class PasswordServiceImpl implements PasswordService, ResourceLoaderAware {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PasswordServiceImpl.class);

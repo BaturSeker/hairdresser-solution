@@ -30,6 +30,7 @@ import java.util.Objects;
 
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class LookupTypeServiceImpl implements LookupTypeService {
 
     private LookupTypeRepository lookupTypeRepository;
@@ -75,6 +76,7 @@ public class LookupTypeServiceImpl implements LookupTypeService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public LookupTypeEntity getLookupType(Integer lookupTypeId) {
         return this.lookupTypeRepository.getOne(lookupTypeId);
     }

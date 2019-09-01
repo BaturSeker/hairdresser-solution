@@ -37,13 +37,21 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class AuthorityServiceImpl implements AuthorityService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthorityServiceImpl.class);
 
     private AuthorityRepository authorityRepository;
     private RoleAuthorityRepository roleAuthorityRepository;
     private RoleRepository roleRepository;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthorityServiceImpl.class);
+    @Autowired
+    public AuthorityServiceImpl(AuthorityRepository authorityRepository,
+                                RoleAuthorityRepository roleAuthorityRepository, RoleRepository roleRepository) {
+        this.authorityRepository = authorityRepository;
+        this.roleAuthorityRepository = roleAuthorityRepository;
+        this.roleRepository = roleRepository;
+    }
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.UPDATE_AUTHORITY + "')")
@@ -143,6 +151,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_AUTHORITY_MANAGEMENT + "')")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public AuthorityEntity getAuthority(Long authorityId) {
         AuthorityEntity role = authorityRepository.getOne(authorityId);
 
@@ -154,6 +163,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_AUTHORITY_MANAGEMENT + "')")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<AuthorityEntity> readAll() {
         return authorityRepository.findByParentAuthorityEntityOrderById(null);
     }
@@ -190,6 +200,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_AUTHORITY_MANAGEMENT + "')")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<AuthorityEntity> getUserAuthorities(UserEntity userEntity) {
         Collection<UserRoleEntity> userRolesByUsersIdEntity = userEntity.getUserRoleEntities();
         List<Long> roleIds = new ArrayList<>();
@@ -209,6 +220,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<AuthorityEntity> getAnonymousUserAuthorities() {
         RoleEntity role = roleRepository.findByName("AnonymousUser");
         Set<Long> authorityIds = new HashSet<>();
@@ -222,11 +234,13 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<AuthorityEntity> readAllAuthority() {
         return IteratorUtils.toList(this.authorityRepository.findAll().iterator());
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<AuthorityPageDto> getAll(PageableSearchFilterDto filterDto) {
 
         SearchSpecificationBuilder<AuthorityEntity> specificationBuilder =
@@ -271,6 +285,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<AuthorityResponseDto> findAuthoritiesByRoleId(Long roleId) {
         List<RoleAuthorityEntity> roleAuthorities = this.roleAuthorityRepository.findAllByRoleEntity(roleRepository.getOne(roleId));
         Set<Long> authorityIds = new HashSet<>();
@@ -336,20 +351,5 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public AuthorityEntity findByAuthorityCode(String authorityCode) {
         return null;
-    }
-
-    @Autowired
-    public void setRoleAuthorityRepository(RoleAuthorityRepository roleAuthorityRepository) {
-        this.roleAuthorityRepository = roleAuthorityRepository;
-    }
-
-    @Autowired
-    public void setAuthorityRepository(AuthorityRepository authorityRepository) {
-        this.authorityRepository = authorityRepository;
-    }
-
-    @Autowired
-    public void setRoleRepository(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
     }
 }

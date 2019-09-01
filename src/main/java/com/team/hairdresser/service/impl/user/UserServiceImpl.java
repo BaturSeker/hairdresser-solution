@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl implements UserService {
     private UsersRepository usersRepository;
     private UserRoleRepository userRoleRepository;
@@ -88,8 +88,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public UserEntity getUser(Long userId) {
         controlGetUser(userId);
         return usersRepository.getOne(userId);
@@ -109,23 +109,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<UserEntity> getAllUsers() {
         return IteratorUtils.toList(usersRepository.findAll().iterator());
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List getComboUsers() {
         List<Object[]> resultList = this.usersRepository.findUsersAsComboValues();
         return ComboResponseBuilder.buildComboResponseList(resultList);
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<UserInfoResponseDto> getUserInfoPage(PageRequest pageRequest) {
         Page<UserEntity> usersPageResult = usersRepository.findUsersBy(pageRequest);
         List<UserInfoResponseDto> userInfoResponseDtoList = new ArrayList<>();
@@ -137,8 +137,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<UserInfoResponseDto> getUsersFiltered(PageableSearchFilterDto filterDto) {
         //TODO: yazılacak
         return null;
@@ -161,8 +161,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_USER_MANAGEMENT + "')")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<UserEntity> findByRole(RoleEntity role) {
         List<UserRoleEntity> userRoleEntities = userRoleRepository.findAllByRole(role);
         Set<Long> userIds = userRoleEntities.stream().map(t -> t.getUser().getId()).collect(Collectors.toSet());
@@ -204,6 +204,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public String getUserInfo(UserEntity user) {
         StringBuilder userName = new StringBuilder();
         userName.append(" ");
@@ -214,6 +215,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public UserEntity getCurrentUser() {
         return (UserEntity) (SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }

@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class LookupValueServiceImpl implements LookupValueService {
 
     private LookupValueRepository lookupValueRepository;
@@ -37,6 +38,7 @@ public class LookupValueServiceImpl implements LookupValueService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_LOOKUP_VALUE_MANAGEMENT + "')")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<LookupValueDto> getAllValuesByLookupTypeEnum(LookupTypeEnum typeEnum) {
         List<LookupValueEntity> values = lookupValueRepository.findAllByLookupTypeEntityTypeEnum(typeEnum);
         return LookupValueMapper.INSTANCE.entityListToDtoList(values);
@@ -44,6 +46,7 @@ public class LookupValueServiceImpl implements LookupValueService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_LOOKUP_VALUE_MANAGEMENT + "')")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<LookupValueDto> getValuesByLookupTypeEnum(LookupTypeEnum typeEnum, Pageable pageRequest) {
         Page<LookupValueEntity> values = lookupValueRepository.findAllByLookupTypeEntityTypeEnum(typeEnum, pageRequest);
         return LookupValueMapper.INSTANCE.entityPageToDtoPage(values);
@@ -113,8 +116,8 @@ public class LookupValueServiceImpl implements LookupValueService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_LOOKUP_VALUE_MANAGEMENT + "')")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public LookupValueEntity read(Integer genericTypeValueId) {
         controlRead(genericTypeValueId);
         return this.lookupValueRepository.getOne(genericTypeValueId);
@@ -158,6 +161,7 @@ public class LookupValueServiceImpl implements LookupValueService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('" + AuthorityCodes.VIEW_LOOKUP_VALUE_MANAGEMENT + "')")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List getComboLookupValues(Integer lookupTypeId) {
         controlComboLookupValues(lookupTypeId);
         List<Object[]> resultList = this.lookupValueRepository.getComboLookupValues(lookupTypeId);

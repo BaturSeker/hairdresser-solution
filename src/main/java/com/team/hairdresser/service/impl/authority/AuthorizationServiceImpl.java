@@ -22,8 +22,13 @@ import java.util.List;
 public class AuthorizationServiceImpl implements AuthorizationService {
 
     private UserRoleRepository userRoleRepository;
-
     private UsersRepository usersRepository;
+
+    @Autowired
+    public AuthorizationServiceImpl(UserRoleRepository userRoleRepository, UsersRepository usersRepository) {
+        this.userRoleRepository = userRoleRepository;
+        this.usersRepository = usersRepository;
+    }
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -61,15 +66,5 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-    }
-
-    @Autowired
-    public void setUserRoleRepository(UserRoleRepository userRoleRepository) {
-        this.userRoleRepository = userRoleRepository;
-    }
-
-    @Autowired
-    public void setUsersRepository(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
     }
 }
