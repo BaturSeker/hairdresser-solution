@@ -53,8 +53,11 @@ public class LoginController {
         if (activeDirectoryHelper.getLdapConfig().getEnabled()) {
             if (activeDirectoryHelper.authenticate(loginRequestDto.getUsername(), loginRequestDto.getPassword())) {
                 UserEntity user = loginService.loginLDAP(loginRequestDto);
+
                 authorizationService.authorize(user);
+
                 List<AuthorityEntity> authorities = this.authorityService.getUserAuthorities(user);
+
                 LoginResponseDto loginResponseDto = new LoginResponseDto();
                 loginResponseDto.setLoginUserResponseDto(getUserResponse(user));
                 loginResponseDto.setAuthorityResponseDto(getAuthorityResponse(authorities));
@@ -62,7 +65,9 @@ public class LoginController {
                 HttpHeaders headers = new HttpHeaders();
                 String token = jwtUtil.generateTokenWithId(user);
                 headers.set("Authorization", StringAppenderUtil.append("Bearer ", token));
+
                 loginResponseDto.setToken(token);
+
                 return new ResponseEntity<>(loginResponseDto, headers, HttpStatus.OK);
             } else {
                 LoginResponseDto loginResponseDto = new LoginResponseDto();
@@ -71,8 +76,11 @@ public class LoginController {
 
         } else {
             UserEntity user = loginService.login(loginRequestDto);
+
             authorizationService.authorize(user);
+
             List<AuthorityEntity> authorities = this.authorityService.getUserAuthorities(user);
+
             LoginResponseDto loginResponseDto = new LoginResponseDto();
             loginResponseDto.setLoginUserResponseDto(getUserResponse(user));
             loginResponseDto.setAuthorityResponseDto(getAuthorityResponse(authorities));
@@ -80,7 +88,9 @@ public class LoginController {
             HttpHeaders headers = new HttpHeaders();
             String token = jwtUtil.generateTokenWithId(user);
             headers.set("Authorization", StringAppenderUtil.append("Bearer ", token));
+
             loginResponseDto.setToken(token);
+
             return new ResponseEntity<>(loginResponseDto, headers, HttpStatus.OK);
         }
 
