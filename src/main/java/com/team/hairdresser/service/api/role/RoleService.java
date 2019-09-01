@@ -13,9 +13,9 @@ public interface RoleService {
 
     void delete(Long roleId);
 
-    RoleEntity getRole(Long roleId);
+    RoleEntity read(Long roleId);
 
-    List<RoleEntity> getAllRoles();
+    List<RoleEntity> readAll();
 
     void assignUserRoles(UserRoleRequestDto userRoleRequestDto);
 
